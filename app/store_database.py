@@ -29,7 +29,8 @@ def destory():
 	orders="DROP TABLE IF EXISTS  products CASCADE"
 	meals="DROP TABLE IF EXISTS  sales CASCADE"
 	users="DROP TABLE IF EXISTS  users CASCADE"
-	drop_queries=[orders,meals,users]
+	product_category="DROP TABLE IF EXISTS  products_category CASCADE"
+	drop_queries=[orders,meals,users,product_category]
 	try:
 		for query in drop_queries:
 			curr.execute(query)
