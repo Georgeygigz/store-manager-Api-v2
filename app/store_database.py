@@ -1,10 +1,13 @@
+#store_database.py
+
+'''Create new tables in store_manager data base'''
 import psycopg2
 import os
 from app.dbconn import create_tables
 db_url=os.getenv("DATABASE_URL")
 
 
-
+'''Create a new connection '''
 def conn_db():
 	try:
 		conn=psycopg2.connect(db_url)
@@ -12,6 +15,7 @@ def conn_db():
 		raise e
 	return conn
 
+''' Add the tables to store_manager database'''
 def create_table():
 	conn=conn_db()
 	curr=conn.cursor()
@@ -22,7 +26,7 @@ def create_table():
 	except Exception as e:
 		print(e)
 
-
+''' Destroying the tables'''
 def destory():
 	conn =conn_db()
 	curr=conn.cursor()

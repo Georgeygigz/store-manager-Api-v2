@@ -1,3 +1,6 @@
+#dbconn.py
+
+'''Creates a connection to the store_manager database '''
 import psycopg2
 import os
 url=os.getenv("DATABASE_URL")
@@ -7,7 +10,9 @@ try:
 
 except Exception as e:
 	print(e)
-                    
+
+'''Creates the tables scripts '''         
+         
 table_1="""CREATE TABLE IF NOT EXISTS products(
                        product_id INT,
  	                   product_name VARCHAR PRIMARY KEY NOT NULL ,
@@ -33,7 +38,7 @@ table_3="""CREATE TABLE IF NOT EXISTS users(
  	                   password VARCHAR NOT NULL,
  	                   user_type VARCHAR NOT NULL);"""
 
-table_4="""CREATE TABLE IF NOT EXISTS category(
+table_4="""CREATE TABLE IF NOT EXISTS products_category(
  	                   category_id INT ,
  	                   category_name VARCHAR PRIMARY KEY NOT NULL);"""
 
