@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+venv/
+.pytest_cache/
+
