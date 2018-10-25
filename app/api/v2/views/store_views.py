@@ -28,7 +28,3 @@ class ViewSingleProduct(Resource):
         if not single_product:
             return {"Error": "Product Not Found"}, 400  # Not found
         return {"Product": single_product}, 200  # ok
-
-
-
-
