@@ -1,0 +1,21 @@
+language: python
+python:
+   - "3.6"
+
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coverage codev
+  - pip install nose
+
+before_script:
+  - psql -c 'create database store_manager;' -U postgres
+  - psql -c 'create database test_store_manager;' -U postgres
+
+# Run tests
+script:
+    - nosetests --with-coverage --cover-package=app && coverage report
+    - coveralls
+
+after_success:
+  - coveralls
