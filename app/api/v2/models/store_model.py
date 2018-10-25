@@ -24,3 +24,12 @@ class Products():
             all_products.append(new_product)
 
         return all_products
+
+    def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
+        database = self.db
+        curr = database.cursor()
+        query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price,low_inventory_stock) VALUES (%s,%s,%s,%s,%s,%s);"
+        curr.execute(query, (product_id, product_name, category_id,
+                             stock_amount, price, low_inventory_stock))
+        database.commit()
+        return {"Message": "Product added successfully"}, 201

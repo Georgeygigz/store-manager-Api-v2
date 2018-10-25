@@ -16,7 +16,7 @@ except Exception as e:
 table_1="""CREATE TABLE IF NOT EXISTS products(
                        product_id INT,
  	                   product_name VARCHAR PRIMARY KEY NOT NULL ,
- 	                   category VARCHAR NOT NULL,
+ 	                   category_id VARCHAR NOT NULL,
  	                   stock_amount INT NOT NULL,
  	                   price FLOAT,
  	                   low_inventory_stock INT);"""
