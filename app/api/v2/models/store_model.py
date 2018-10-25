@@ -32,4 +32,4 @@ class Products():
         curr.execute(query, (product_id, product_name, category_id,
                              stock_amount, price, low_inventory_stock))
         database.commit()
-        return {"Message": "Product Save succefully"}, 201
+        return {"Message": "Product added successfully"}, 201
