@@ -7,6 +7,7 @@ from flask_restful import Resource
 
 # local imports
 from app.api.v2.models.store_model import Products
+from app.api.v2.utils.utils import Validate
 
 
 
@@ -22,6 +23,7 @@ class ViewProducts(Resource):
     """Add a new product."""    
     def post(self,current_user):
         data = request.get_json(force=True)
+        Validate().validate_empty_product_inputs(data)  
         product_id = len(products)+1
         product_name = data["product_name"]
         category = data["category_id"]
@@ -55,7 +57,7 @@ class ViewProducts(Resource):
         return {"New Product": new_product}, 201  # created
     
 
-'''Fetch single product'''
+"""Fetch single product."""
 class ViewSingleProduct(Resource):
     def get(self,product_id):
         single_product = [
