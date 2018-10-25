@@ -1,6 +1,6 @@
 # app/api/v1/views/store_views.py
 
-'''This is where all API Endpoints will be captured'''
+"""This is where all API Endpoints will be captured."""
 from flask import request, jsonify, make_response
 from datetime import date
 from flask_restful import Resource
