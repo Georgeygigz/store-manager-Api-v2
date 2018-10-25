@@ -4,12 +4,7 @@ import json
 import jwt
 from app import create_app
 
-
-
-'''
-Creating a new testing  class
-'''
-
+'''Creating a new testing  class'''
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
@@ -221,5 +216,5 @@ class BaseTest(unittest.TestCase):
     '''Test Login'''
     def user_can_login(self):
         return self.app.post('/api/v1/auth/login', data=json.dumps(self.user ))
-        
 
+    
