@@ -21,7 +21,7 @@ class ViewProducts(Resource):
         return make_response(jsonify({"Available Products": products}), 200)
 
     """Add a new product."""    
-    def post(self,current_user):
+    def post(self):
         data = request.get_json(force=True)
         Validate().validate_empty_product_inputs(data)  
         product_id = len(products)+1
