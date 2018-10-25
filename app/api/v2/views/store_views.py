@@ -26,5 +26,5 @@ class ViewSingleProduct(Resource):
         single_product = [
             product for product in products if product['product_id'] == product_id]
         if not single_product:
-            return {"Error": "Product Not Found"}, 400  # Not found
+            return {"Error": "Product Not Found"}, 404  # Not found
         return {"Product": single_product}, 200  # ok
