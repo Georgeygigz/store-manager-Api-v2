@@ -18,3 +18,17 @@ class ViewProducts(Resource):
         if not products:
             return make_response(jsonify({"Message": "No Available products"}), 200)
         return make_response(jsonify({"Available Products": products}), 200)
+    
+
+'''Fetch single product'''
+class ViewSingleProduct(Resource):
+    def get(self,product_id):
+        single_product = [
+            product for product in products if product['product_id'] == product_id]
+        if not single_product:
+            return {"Error": "Product Not Found"}, 400  # Not found
+        return {"Product": single_product}, 200  # ok
+
+
+
+
