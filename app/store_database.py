@@ -42,5 +42,3 @@ def destory():
 		conn.commit()
 	except Exception as e:
 		print(e)
-
-

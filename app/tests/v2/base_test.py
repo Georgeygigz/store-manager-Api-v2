@@ -216,5 +216,3 @@ class BaseTest(unittest.TestCase):
     '''Test Login'''
     def user_can_login(self):
         return self.app.post('/api/v1/auth/login', data=json.dumps(self.user ))
-
-    
