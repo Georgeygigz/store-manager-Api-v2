@@ -8,4 +8,3 @@ nosetests.xml
 coverage.xml
 venv/
 .pytest_cache/
-
