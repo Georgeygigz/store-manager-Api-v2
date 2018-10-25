@@ -25,6 +25,7 @@ class Products():
 
         return all_products
 
+    """Insert New Product."""
     def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
         database = self.db
         curr = database.cursor()
@@ -33,3 +34,15 @@ class Products():
                              stock_amount, price, low_inventory_stock))
         database.commit()
         return {"Message": "Product added successfully"}, 201
+    
+    
+    """Update Product."""
+    def update_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
+        database = self.db
+        curr = database.cursor()
+        query = "UPDATE products set product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s where product_id=%s;"
+        curr.execute(query, (product_name, category_id,
+                             stock_amount, price, low_inventory_stock,product_id))
+        database.commit()
+        return {"Message": "Product Updated successfully"}, 201
+    
