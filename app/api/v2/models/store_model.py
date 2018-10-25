@@ -1,5 +1,7 @@
+#app/api/v2/models/store_model.py
 from ....store_database import conn_db
 
+''' Model file that interacts with the database'''
 class Products():
     def __init__(self):
         self.db = conn_db()
@@ -22,4 +24,3 @@ class Products():
             all_products.append(new_product)
 
         return all_products
-     
