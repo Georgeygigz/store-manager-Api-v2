@@ -68,7 +68,7 @@ class Products():
             return {"Message": "Product Updated successfully"}, 201
 
         except Exception as e:
-            return {"Message": e}, 201
+            return {"Message": e}
 
 class Sales:
     def __init__(self):
@@ -76,24 +76,26 @@ class Sales:
 
     def get_all_sales(self):
         conn = self.db
-        curr = conn.cursor()
-        query = """SELECT * FROM sales;"""
-        curr.execute(query)
-        data = curr.fetchall()
-        all_sale_records = []
-        for k, v in enumerate(data):
-            sale_id,attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold = v
-            new_sale = {
-                "sale_id": sale_id,
-                "attedant_name": attedant_name,
-                "customer_name": customer_name,
-                "product_name": product_name,
-                "product_price": product_price,
-                "quantity": quantity,
-                "total_price": total_price,
-                "date_sold": date_sold
-            }
-            all_sale_records.append(new_sale)
+        try:
+            curr = conn.cursor()
+            query = """SELECT * FROM sales;"""
+            curr.execute(query)
+            data = curr.fetchall()
+            all_sale_records = []
+            for k, v in enumerate(data):
+                sale_id,attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold = v
+                new_sale = {
+                    "sale_id": sale_id,
+                    "attedant_name": attedant_name,
+                    "customer_name": customer_name,
+                    "product_name": product_name,
+                    "product_price": product_price,
+                    "quantity": quantity,
+                    "total_price": total_price,
+                    "date_sold": date_sold
+                }
+                all_sale_records.append(new_sale)
 
-        return all_sale_records
-    
+            return all_sale_records
+        except Exception as e:
+            return {"Message": e}
