@@ -1,6 +1,6 @@
 #app/api/v2/models/store_model.py
 from ....store_database import conn_db
-from flask import request,json
+
 
 ''' Model file that interacts with the database'''
 class Products():
@@ -69,4 +69,31 @@ class Products():
 
         except Exception as e:
             return {"Message": e}, 201
+
+class Sales:
+    def __init__(self):
+        self.db = conn_db()
+
+    def get_all_sales(self):
+        conn = self.db
+        curr = conn.cursor()
+        query = """SELECT * FROM sales;"""
+        curr.execute(query)
+        data = curr.fetchall()
+        all_sale_records = []
+        for k, v in enumerate(data):
+            sale_id,attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold = v
+            new_sale = {
+                "sale_id": sale_id,
+                "attedant_name": attedant_name,
+                "customer_name": customer_name,
+                "product_name": product_name,
+                "product_price": product_price,
+                "quantity": quantity,
+                "total_price": total_price,
+                "date_sold": date_sold
+            }
+            all_sale_records.append(new_sale)
+
+        return all_sale_records
     
