@@ -98,3 +98,10 @@ class ViewSalesRecord(Resource):
             return make_response(jsonify({"Message": "No Available sales records"}), 200)
         return {"Sales Record": sales_record}, 200  # ok
  
+class SingleSale(Resource):
+    def get(self,sale_id):
+        single_sale = [
+            sale for sale in sales_record if sale['sale_id'] == sale_id]
+        if single_sale:
+            return {"Sale": single_sale}, 200  # ok
+        return {"Message": "Sale Not Found"}, 400  # ok
