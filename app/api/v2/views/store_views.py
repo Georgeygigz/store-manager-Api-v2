@@ -33,14 +33,14 @@ class ViewProducts(Resource):
         product = [product for product in products if product['product_name']
                    == request.json['product_name']]
         if (not request.json or not "product_name" in request.json):
-            return {'Error': "Request Not found"}, 404  # not found
+            return make_response(jsonify({'Error': "Request Not found"}), 404)  # not found
 
         if type((request.json['stock_amount']) or (request.json['price'])) not in [int, float]:
-            return {"Error": "Require int or float type"}
+            return make_response(jsonify({"Error": "Require int or float type"}))
 
         if request.json['product_name'] in [n_product['product_name'] for n_product in products]:
             product[0]["stock_amount"] += request.json['stock_amount']
-            return {"Products": product}, 200  # ok
+            return make_response(jsonify({"Products": product}), 200)  # ok
 
         new_product = {
             "product_id": product_id,
@@ -54,22 +54,24 @@ class ViewProducts(Resource):
         new_pro=Products()
         new_pro.insert_new_product(**new_product)
 
-        return {"New Product": new_product}, 201  # created
+        return make_response(jsonify({"New Product": new_product}), 201)  # created
     
 
 
 
-"""Fetch single product."""
+
 class ViewSingleProduct(Resource):
+    """Fetch single product."""
     def get(self,product_id):
         single_product = [
             product for product in products if product['product_id'] == product_id]
         if not single_product:
-            return {"Error": "Product Not Found"}, 404  # Not found
+            return make_response(jsonify({"Error": "Product Not Found"}), 404)  # Not found
         return make_response(jsonify({"Product": single_product}), 200)  # ok
     
 
     def put(self,product_id): 
+        """Update product."""
         data = request.get_json(force=True)
         product_name = data["product_name"]
         category_id = data["category_id"]
