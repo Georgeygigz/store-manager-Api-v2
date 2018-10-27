@@ -85,3 +85,12 @@ class ViewSingleProduct(Resource):
         new_pro.update_product(product_id,product_name,category_id,stock_amount,price,low_inventory_stock)
      
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product[0]['product_name'])}), 200) #ok
+    
+    def delete(self,product_id): 
+        """Update product."""
+        product=[product for product in products if product['product_id']==product_id]
+        if not product:
+            return make_response(jsonify({'Error':"Product Not found"}), 400)
+        new_pro=Products()
+        new_pro.delete_product(product_id)
+        return make_response(jsonify({'Message':"Deleted Successfuly"}), 200) #ok

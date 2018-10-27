@@ -53,7 +53,7 @@ class Products():
         database = self.db
         curr = database.cursor()
         query = "DELETE FROM products WHERE product_id=%s;"
-        curr.execute(query, (product_id))
+        curr.execute(query, (product_id,))
         database.commit()
         return {"Message": "Product Updated successfully"}, 201
     
