@@ -6,12 +6,13 @@ from datetime import date
 from flask_restful import Resource
 
 # local imports
-from app.api.v2.models.store_model import Products
+from app.api.v2.models.store_model import (Products,Sales)
 from app.api.v2.utils.utils import Validate
 
 
 
 products = Products().get_all_products()
+sales_record=Sales().get_all_sales()
 
 class ViewProducts(Resource):
     """Get all products."""
@@ -55,10 +56,6 @@ class ViewProducts(Resource):
         new_pro.insert_new_product(**new_product)
 
         return make_response(jsonify({"New Product": new_product}), 201)  # created
-    
-
-
-
 
 class ViewSingleProduct(Resource):
     """Fetch single product."""
@@ -94,3 +91,10 @@ class ViewSingleProduct(Resource):
         new_pro=Products()
         new_pro.delete_product(product_id)
         return make_response(jsonify({'Message':"Deleted Successfuly"}), 200) #ok
+
+class ViewSalesRecord(Resource):
+    def get(self):
+        if not sales_record:
+            return make_response(jsonify({"Message": "No Available sales records"}), 200)
+        return {"Sales Record": sales_record}, 200  # ok
+ 
