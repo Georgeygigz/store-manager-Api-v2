@@ -97,6 +97,45 @@ class ViewSalesRecord(Resource):
         if not sales_record:
             return make_response(jsonify({"Message": "No Available sales records"}), 200)
         return {"Sales Record": sales_record}, 200  # ok
+    
+    def post(self):
+        current_date = str(date.today())
+        data = request.get_json(force=True)
+        #Validate().validate_empty_sales_inputs(data)
+        current_product = [
+            product for product in products if product['product_name'] == request.json['product_name']]
+        if not current_product or current_product[0]['stock_amount'] == 0:
+            return {"Message": "{} Out of stock, Please add {} in stock beforemaking a sale".format(request.json['product_name'], request.json['product_name'])}, 200
+        sale_id = len(sales_record)+1
+        attedant_name = data["attedant_name"]
+        customer_name = data["customer_name"]
+        product_name = data["product_name"]
+        price = current_product[0]['price']
+        quantity = data["quantity"]
+        total_price = price*quantity
+        date_sold = current_date
+
+        if (not request.json or not "product_name" in request.json):
+            return {'Error': "Request Not found"}, 400  # not found
+
+        if request.json['product_name'] in [sale['product_name'] for sale in sales_record]:
+            # ok
+            return {"Message": "{} Exist in cart".format(request.json['product_name'])}, 200
+
+        new_sale = {
+            "sale_id": sale_id,
+            "attedant_name": attedant_name,
+            "customer_name": customer_name,
+            "product_name": product_name,
+            "product_price": price,
+            "quantity": quantity,
+            "total_price": total_price,
+            "date_sold": date_sold
+        }
+        new_sales_record=Sales()
+        new_sales_record.insert_new_sale(**new_sale)
+        current_product[0]['stock_amount'] -= request.json['quantity']
+        return {"New Sale Record": new_sale}, 201  # created
  
 class SingleSale(Resource):
     def get(self,sale_id):
