@@ -25,6 +25,7 @@ table_2="""CREATE TABLE IF NOT EXISTS sales(
  	                    sale_id INT PRIMARY KEY,
  	                    attedant_name VARCHAR NOT NULL ,
  	                    customer_name VARCHAR NOT NULL,
+ 	                    product_name VARCHAR NOT NULL,
  	                    product_price FLOAT NOT NULL,
  	                    quantity FLOAT NOT NULL,
  	                    total_price FLOAT NOT NULL,
