@@ -57,6 +57,8 @@ class ViewProducts(Resource):
         return {"New Product": new_product}, 201  # created
     
 
+
+
 """Fetch single product."""
 class ViewSingleProduct(Resource):
     def get(self,product_id):
@@ -64,4 +66,20 @@ class ViewSingleProduct(Resource):
             product for product in products if product['product_id'] == product_id]
         if not single_product:
             return {"Error": "Product Not Found"}, 404  # Not found
-        return {"Product": single_product}, 200  # ok
+        return make_response(jsonify({"Product": single_product}), 200)  # ok
+    
+
+    def put(self,product_id): 
+        data = request.get_json(force=True)
+        product_name = data["product_name"]
+        category_id = data["category_id"]
+        stock_amount = data["stock_amount"]
+        price = data['price']
+        low_inventory_stock = data['low_inventory_stock']
+        product=[product for product in products if product['product_id']==product_id]
+        if not product:
+            return make_response(jsonify({'Error':"Product Not found"}), 400)
+        new_pro=Products()
+        new_pro.update_product(product_id,product_name,category_id,stock_amount,price,low_inventory_stock)
+     
+        return make_response(jsonify({'Message':"{} Updated Successfuly".format(product[0]['product_name'])}), 200) #ok

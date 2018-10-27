@@ -1,5 +1,6 @@
 #app/api/v2/models/store_model.py
 from ....store_database import conn_db
+from flask import request,json
 
 ''' Model file that interacts with the database'''
 class Products():
@@ -26,6 +27,7 @@ class Products():
         return all_products
 
     """Insert New Product."""
+
     def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
         database = self.db
         curr = database.cursor()
@@ -37,10 +39,10 @@ class Products():
     
     
     """Update Product."""
-    def update_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
+    def update_product(self,product_id,product_name, category_id,stock_amount, price, low_inventory_stock,):
         database = self.db
         curr = database.cursor()
-        query = "UPDATE products set product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s where product_id=%s;"
+        query = "UPDATE products SET product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s WHERE product_id=%s;"
         curr.execute(query, (product_name, category_id,
                              stock_amount, price, low_inventory_stock,product_id))
         database.commit()
