@@ -99,3 +99,12 @@ class Sales:
             return all_sale_records
         except Exception as e:
             return {"Message": e}
+    
+    def insert_new_sale(self, sale_id,attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold):
+        database = self.db
+        curr = database.cursor()
+        query = "INSERT INTO sales (sale_id,attedant_name,customer_name,product_name,product_price,quantity,total_price,date_sold) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
+        curr.execute(query, (sale_id,attedant_name, customer_name,
+                             product_name, product_price, quantity, total_price, date_sold))
+        database.commit()
+        return {"Message": "Sale record Save succefully"}, 201
