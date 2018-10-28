@@ -133,3 +133,11 @@ class Categories:
             return all_categories
         except Exception as e:
             return {"Message": e}
+    
+    def insert_new_produc_category(self, category_id,category_name):
+        database = self.db
+        curr = database.cursor()
+        query = "INSERT INTO products_category (category_id,category_name) VALUES (%s,%s);"
+        curr.execute(query, (category_id,category_name))
+        database.commit()
+        return {"Message": "Sale record Save succefully"}, 201
