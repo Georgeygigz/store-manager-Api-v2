@@ -151,3 +151,19 @@ class ProductCategories(Resource):
         if not categories:
             return make_response(jsonify({"Message": "No Available products categories"}), 200)
         return {"Sales Record": categories}, 200  # ok
+    
+    def post(self):
+        data = request.get_json(force=True) 
+        category_id = len(categories)+1
+        category_name = data["category_name"]
+        category=[c for c in categories if c['category_name']==request.json['category_name']]
+        if category:
+            return make_response(jsonify({"Message":" {} Category Exist".format(request.json['category_name'])}))
+        new_category = {
+            "category_id": category_id,
+            "category_name": category_name,
+        }
+        new_cat=Categories()
+        new_cat.insert_new_produc_category(**new_category)
+        
+        return make_response(jsonify({"Category":new_category}))
