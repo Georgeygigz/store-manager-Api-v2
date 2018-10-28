@@ -108,3 +108,28 @@ class Sales:
                              product_name, product_price, quantity, total_price, date_sold))
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
+
+class Categories:
+    def __init__(self):
+        self.db = conn_db()
+
+    def get_all_categories(self):
+        conn = self.db
+        try:
+            curr = conn.cursor()
+            query = """SELECT * FROM products_category;"""
+            curr.execute(query)
+            data = curr.fetchall()
+            all_categories = []
+              
+            for k, v in enumerate(data):
+                category_id,category_name = v
+                categories = {
+                    "category_id": category_id,
+                    "category_name": category_name,
+                }
+                all_categories.append(categories)
+
+            return all_categories
+        except Exception as e:
+            return {"Message": e}
