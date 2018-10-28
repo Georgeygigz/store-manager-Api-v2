@@ -6,13 +6,14 @@ from datetime import date
 from flask_restful import Resource
 
 # local imports
-from app.api.v2.models.store_model import (Products,Sales)
+from app.api.v2.models.store_model import (Products,Sales,Categories)
 from app.api.v2.utils.utils import Validate
 
 
 
 products = Products().get_all_products()
 sales_record=Sales().get_all_sales()
+categories=Categories().get_all_categories()
 
 class ViewProducts(Resource):
     """Get all products."""
@@ -144,3 +145,9 @@ class SingleSale(Resource):
         if single_sale:
             return {"Sale": single_sale}, 200  # ok
         return {"Message": "Sale Not Found"}, 400  # ok
+
+class ProductCategories(Resource):
+    def get(self):
+        if not categories:
+            return make_response(jsonify({"Message": "No Available products categories"}), 200)
+        return {"Sales Record": categories}, 200  # ok
