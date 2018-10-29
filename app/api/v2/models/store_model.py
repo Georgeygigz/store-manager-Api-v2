@@ -174,3 +174,34 @@ class Categories:
         except Exception as e:
             return {"Message": e}
 
+class Users:
+    def __init__(self):
+        self.db = conn_db()
+
+    def insert_new_user(self, user_id, username, email, password, role):
+        database = self.db
+        curr = database.cursor()
+        query = "INSERT INTO users (user_id, username,email, password,user_type) VALUES (%s,%s,%s,%s,%s);"
+        curr.execute(query, (user_id, username, email, password, role))
+        database.commit()
+        return {"Message": "User created succefully"}, 201
+
+    def get_all_users(self):
+        conn = self.db
+        curr = conn.cursor()
+        query = """SELECT * FROM users;"""
+        curr.execute(query)
+        data = curr.fetchall()
+        all_users = []
+
+        for k, v in enumerate(data):
+            user_id, username, email, password, role = v
+            users = {"user_id": user_id,
+                     "username": username,
+                     "email": email,
+                     "password": password,
+                     "role": role}
+            all_users.append(users)
+        return all_users
+
+
