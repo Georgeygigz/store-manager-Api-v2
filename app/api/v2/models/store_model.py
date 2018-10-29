@@ -162,11 +162,11 @@ class Categories:
             print(e)
     
     """Delete Category."""
-    def delete_product(self, category_id):
+    def delete_product_category(self, category_id):
         database = self.db
         try:
             curr = database.cursor()
-            query = "DELETE FROM products WHERE category_id=%s;"
+            query = "DELETE FROM products_category WHERE category_id=%s;"
             curr.execute(query, (category_id,))
             database.commit()
             return {"Message": "Product Updated successfully"}, 201

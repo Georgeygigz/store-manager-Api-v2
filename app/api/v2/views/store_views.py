@@ -173,7 +173,7 @@ class ProductCategories(Resource):
         return make_response(jsonify({"Category":new_category}))
 
 class SinleProductCategory(Resource):
-     def put(self,category_id): 
+    def put(self,category_id): 
         """Update product."""
         data = request.get_json(force=True)
         category_name = data["category_name"]
@@ -185,3 +185,14 @@ class SinleProductCategory(Resource):
         new_category.update_product_category(category_id,category_name)
     
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product_category[0]['category_name'])}), 200) #ok
+    
+    def delete(self,category_id):
+        """Delete product."""
+        product_category=[category for category in categories if category['category_id']==category_id]
+        if not product_category:
+            return make_response(jsonify({'Error':"Category Not found"}), 400)
+        new_category=Categories()
+        new_category.delete_product_category(category_id)
+    
+        return make_response(jsonify({'Message':"{} Deleted Successfuly".format(product_category[0]['category_name'])}), 200) #ok
+
