@@ -85,7 +85,7 @@ class ViewSingleProduct(Resource):
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product[0]['product_name'])}), 200) #ok
     
     def delete(self,product_id): 
-        """Update product."""
+        """Delete product."""
         product=[product for product in products if product['product_id']==product_id]
         if not product:
             return make_response(jsonify({'Error':"Product Not found"}), 400)
@@ -94,11 +94,12 @@ class ViewSingleProduct(Resource):
         return make_response(jsonify({'Message':"Deleted Successfuly"}), 200) #ok
 
 class ViewSalesRecord(Resource):
+    """Get all sales' records."""
     def get(self):
         if not sales_record:
             return make_response(jsonify({"Message": "No Available sales records"}), 200)
         return {"Sales Record": sales_record}, 200  # ok
-    
+    """ Make a new sale record."""
     def post(self):
         current_date = str(date.today())
         data = request.get_json(force=True)
@@ -139,6 +140,7 @@ class ViewSalesRecord(Resource):
         return {"New Sale Record": new_sale}, 201  # created
  
 class SingleSale(Resource):
+    """ Get single sale record."""
     def get(self,sale_id):
         single_sale = [
             sale for sale in sales_record if sale['sale_id'] == sale_id]
@@ -147,11 +149,13 @@ class SingleSale(Resource):
         return {"Message": "Sale Not Found"}, 400  # ok
 
 class ProductCategories(Resource):
+    """Get all products' Categories."""
     def get(self):
         if not categories:
             return make_response(jsonify({"Message": "No Available products categories"}), 200)
         return {"Sales Record": categories}, 200  # ok
     
+    """Add a new product category."""
     def post(self):
         data = request.get_json(force=True) 
         category_id = len(categories)+1
