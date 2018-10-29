@@ -4,10 +4,12 @@
 from flask import request, jsonify, make_response
 from datetime import date
 from flask_restful import Resource
+from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 # local imports
 from app.api.v2.models.store_model import (Products,Sales,Categories)
 from app.api.v2.utils.utils import Validate
+from app.api.v2.utils.authorization import (admin_required, store_attendant_required)
 
 
 
@@ -17,12 +19,15 @@ categories=Categories().get_all_categories()
 
 class ViewProducts(Resource):
     """Get all products."""
+    @jwt_required
     def get(self):
         if not products:
             return make_response(jsonify({"Message": "No Available products"}), 200)
         return make_response(jsonify({"Available Products": products}), 200)
 
-    """Add a new product."""    
+    """Add a new product."""  
+    @jwt_required
+    @admin_required  
     def post(self):
         data = request.get_json(force=True)
         Validate().validate_empty_product_inputs(data)  
@@ -60,6 +65,7 @@ class ViewProducts(Resource):
 
 class ViewSingleProduct(Resource):
     """Fetch single product."""
+    @jwt_required
     def get(self,product_id):
         single_product = [
             product for product in products if product['product_id'] == product_id]
@@ -67,7 +73,8 @@ class ViewSingleProduct(Resource):
             return make_response(jsonify({"Error": "Product Not Found"}), 404)  # Not found
         return make_response(jsonify({"Product": single_product}), 200)  # ok
     
-
+    @jwt_required
+    @admin_required
     def put(self,product_id): 
         """Update product."""
         data = request.get_json(force=True)
@@ -84,6 +91,8 @@ class ViewSingleProduct(Resource):
      
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product[0]['product_name'])}), 200) #ok
     
+    @jwt_required
+    @admin_required
     def delete(self,product_id): 
         """Delete product."""
         product=[product for product in products if product['product_id']==product_id]
@@ -94,13 +103,18 @@ class ViewSingleProduct(Resource):
         return make_response(jsonify({'Message':"Deleted Successfuly"}), 200) #ok
 
 class ViewSalesRecord(Resource):
-    """Get all sales' records."""
+    
+    @jwt_required
     def get(self):
+        """Get all sales' records."""
         if not sales_record:
             return make_response(jsonify({"Message": "No Available sales records"}), 200)
         return {"Sales Record": sales_record}, 200  # ok
-    """ Make a new sale record."""
+
+    @jwt_required
+    @admin_required
     def post(self):
+        """ Make a new sale record."""
         current_date = str(date.today())
         data = request.get_json(force=True)
         #Validate().validate_empty_sales_inputs(data)
@@ -140,8 +154,11 @@ class ViewSalesRecord(Resource):
         return {"New Sale Record": new_sale}, 201  # created
  
 class SingleSale(Resource):
-    """ Get single sale record."""
+   
+    @jwt_required
+    @admin_required
     def get(self,sale_id):
+        """ Get single sale record."""
         single_sale = [
             sale for sale in sales_record if sale['sale_id'] == sale_id]
         if single_sale:
@@ -149,14 +166,19 @@ class SingleSale(Resource):
         return {"Message": "Sale Not Found"}, 400  # ok
 
 class ProductCategories(Resource):
-    """Get all products' Categories."""
+    @jwt_required
+    @admin_required
     def get(self):
+        """Get all products' Categories."""
         if not categories:
             return make_response(jsonify({"Message": "No Available products categories"}), 200)
         return {"Sales Record": categories}, 200  # ok
     
-    """Add a new product category."""
+
+    @jwt_required
+    @admin_required
     def post(self):
+        """Add a new product category."""
         data = request.get_json(force=True) 
         category_id = len(categories)+1
         category_name = data["category_name"]
@@ -173,6 +195,8 @@ class ProductCategories(Resource):
         return make_response(jsonify({"Category":new_category}))
 
 class SinleProductCategory(Resource):
+    @jwt_required
+    @admin_required
     def put(self,category_id): 
         """Update product."""
         data = request.get_json(force=True)
@@ -185,7 +209,9 @@ class SinleProductCategory(Resource):
         new_category.update_product_category(category_id,category_name)
     
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product_category[0]['category_name'])}), 200) #ok
-    
+        
+    @jwt_required
+    @admin_required
     def delete(self,category_id):
         """Delete product."""
         product_category=[category for category in categories if category['category_id']==category_id]
