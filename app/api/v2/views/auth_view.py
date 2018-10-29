@@ -44,3 +44,24 @@ class CreateAccount(Resource):
             return make_response(jsonify({"message": "Account created successfuly"}), 201)
 
         return make_response(jsonify({"Message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
+
+class Login(Resource):
+    """Login Endpoint."""
+    def post(self):
+        data = request.get_json(force=True)
+        email=data['email']
+        get_password=data['password']
+        cur_user=[c_user for c_user in users if c_user['email']==email]
+
+        if  len(cur_user) > 0:		
+            password =cur_user[0]['password']
+            if sha256_crypt.verify(get_password, password):      
+                token = create_access_token(identity=cur_user[0]['email'])
+                result={"message":"Login succesful","token":token}
+                
+            else:
+                return make_response(jsonify({"message":"Invalid Password"}))
+        else:
+            return make_response(jsonify({"message":"Invalid Email. If have not account, register"}))
+
+        return result,200
