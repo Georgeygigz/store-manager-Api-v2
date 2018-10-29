@@ -160,4 +160,17 @@ class Categories:
             return {"Message": "Category Updated successfully"}, 201
         except Exception as e:
             print(e)
+    
+    """Delete Category."""
+    def delete_product(self, category_id):
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "DELETE FROM products WHERE category_id=%s;"
+            curr.execute(query, (category_id,))
+            database.commit()
+            return {"Message": "Product Updated successfully"}, 201
+
+        except Exception as e:
+            return {"Message": e}
 
