@@ -171,3 +171,17 @@ class ProductCategories(Resource):
         new_cat.insert_new_produc_category(**new_category)
         
         return make_response(jsonify({"Category":new_category}))
+
+class SinleProductCategory(Resource):
+     def put(self,category_id): 
+        """Update product."""
+        data = request.get_json(force=True)
+        category_name = data["category_name"]
+   
+        product_category=[category for category in categories if category['category_id']==category_id]
+        if not product_category:
+            return make_response(jsonify({'Error':"Category Not found"}), 400)
+        new_category=Categories()
+        new_category.update_product_category(category_id,category_name)
+    
+        return make_response(jsonify({'Message':"{} Updated Successfuly".format(product_category[0]['category_name'])}), 200) #ok
