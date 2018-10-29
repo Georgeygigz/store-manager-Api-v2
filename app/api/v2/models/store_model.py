@@ -24,8 +24,8 @@ class Products():
                                "price": price,
                                "low_inventory_stock": low_inventory_stock}
                 all_products.append(new_product)
-
             return all_products
+
         except Exception as e:
             print(e)
 
