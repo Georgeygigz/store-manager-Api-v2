@@ -148,3 +148,16 @@ class Categories:
         curr.execute(query, (category_id, category_name))
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
+    
+    """Update product category."""
+    def update_product_category(self, category_id, category_name):
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "UPDATE products_category SET category_name=%s WHERE category_id=%s;"
+            curr.execute(query, (category_name, category_id))
+            database.commit()
+            return {"Message": "Category Updated successfully"}, 201
+        except Exception as e:
+            print(e)
+
