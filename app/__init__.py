@@ -13,6 +13,7 @@ from instance.config import app_configuration
 from app.store_database import create_table, destory
 from app.api.v2.views.store_views import (
     ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleSale, ProductCategories, SinleProductCategory)
+from app.api.v2.views.auth_view import CreateAccount, Login
 
 blueprint = Blueprint('product', __name__, url_prefix='/api/v2')
 app_api = Api(blueprint)
@@ -32,4 +33,6 @@ def create_app():
     app_api.add_resource(SingleSale, '/sales/<int:sale_id>')
     app_api.add_resource(ProductCategories, '/category')
     app_api.add_resource(SinleProductCategory, '/category/<int:category_id>')
+    app_api.add_resource(CreateAccount, '/auth/register')
+    app_api.add_resource(Login, '/auth/login')
     return app
