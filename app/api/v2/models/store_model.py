@@ -29,9 +29,9 @@ class Products():
         except Exception as e:
             print(e)
 
-    """Insert New Product."""
 
     def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
+        """Insert New Product."""
         database = self.db
         try:
             curr = database.cursor()
@@ -43,9 +43,9 @@ class Products():
         except Exception as e:
             print(e)
 
-    """Update Product."""
 
     def update_product(self, product_id, product_name, category_id, stock_amount, price, low_inventory_stock,):
+        """Update Product."""
         database = self.db
         try:
             curr = database.cursor()
@@ -57,9 +57,8 @@ class Products():
         except Exception as e:
             print(e)
 
-    """Delete Product."""
-
     def delete_product(self, product_id):
+        """Delete Product."""
         database = self.db
         try:
             curr = database.cursor()
@@ -71,13 +70,14 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-"""Sales Records."""
+
 class Sales:
+    """Sales Records."""
     def __init__(self):
         self.db = conn_db()
 
-    """Get all sales records."""
     def get_all_sales(self):
+        """Get all sales records."""
         conn = self.db
         try:
             curr = conn.cursor()
@@ -103,8 +103,9 @@ class Sales:
         except Exception as e:
             return {"Message": e}
     
-    """Make a new sale Record."""
+    
     def insert_new_sale(self, sale_id, attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold):
+        """Make a new sale Record."""
         database = self.db
         curr = database.cursor()
         query = "INSERT INTO sales (sale_id,attedant_name,customer_name,product_name,product_price,quantity,total_price,date_sold) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
@@ -113,13 +114,15 @@ class Sales:
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
 
-"""Products' category."""
+
 class Categories:
     def __init__(self):
+        """Products' category."""
         self.db = conn_db()
     
-    """Get all products' categories"""
+    
     def get_all_categories(self):
+        """Get all products' categories"""
         conn = self.db
         try:
             curr = conn.cursor()
@@ -140,8 +143,9 @@ class Categories:
         except Exception as e:
             return {"Message": e}
 
-    """Add new product category."""
+   
     def insert_new_produc_category(self, category_id, category_name):
+        """Add new product category."""
         database = self.db
         curr = database.cursor()
         query = "INSERT INTO products_category (category_id,category_name) VALUES (%s,%s);"
@@ -149,8 +153,8 @@ class Categories:
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
     
-    """Update product category."""
     def update_product_category(self, category_id, category_name):
+        """Update product category."""
         database = self.db
         try:
             curr = database.cursor()
@@ -161,8 +165,9 @@ class Categories:
         except Exception as e:
             print(e)
     
-    """Delete Category."""
+    
     def delete_product_category(self, category_id):
+        """Delete Category."""
         database = self.db
         try:
             curr = database.cursor()
@@ -175,9 +180,11 @@ class Categories:
             return {"Message": e}
 
 class Users:
+    """Users mode."""
     def __init__(self):
         self.db = conn_db()
-
+    
+    """Insert new user."""
     def insert_new_user(self, user_id, username, email, password, role):
         database = self.db
         curr = database.cursor()
@@ -186,6 +193,7 @@ class Users:
         database.commit()
         return {"Message": "User created succefully"}, 201
 
+    """Get all users."""
     def get_all_users(self):
         conn = self.db
         curr = conn.cursor()
