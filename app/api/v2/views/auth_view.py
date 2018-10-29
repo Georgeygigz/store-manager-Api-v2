@@ -12,11 +12,14 @@ from flask_restful import Resource,reqparse
 # import class products
 from app.api.v2.models.store_model import Users
 from app.api.v2.utils.utils import Validate
+from app.api.v2.utils.authorization import admin_required
 
 users =Users().get_all_users()
 
 class CreateAccount(Resource):
     """Create a new account."""
+    @jwt_required
+    @admin_required
     def post(self):
         """Create an account for new user."""
         data = request.get_json(force=True)
