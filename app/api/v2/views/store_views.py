@@ -12,15 +12,11 @@ from app.api.v2.utils.utils import Validate
 from app.api.v2.utils.authorization import (admin_required, store_attendant_required)
 
 
-
-products = Products().get_all_products()
-sales_record=Sales().get_all_sales()
-categories=Categories().get_all_categories()
-
 class ViewProducts(Resource):
     """Get all products."""
     @jwt_required
     def get(self):
+        products = Products().get_all_products()
         if not products:
             return make_response(jsonify({"Message": "No Available products"}), 200)
         return make_response(jsonify({"Available Products": products}), 200)
@@ -29,6 +25,7 @@ class ViewProducts(Resource):
     @jwt_required
     @admin_required  
     def post(self):
+        products = Products().get_all_products()
         data = request.get_json(force=True)
         Validate().validate_empty_product_inputs(data)  
         product_id = len(products)+1
@@ -67,6 +64,7 @@ class ViewSingleProduct(Resource):
     """Fetch single product."""
     @jwt_required
     def get(self,product_id):
+        products = Products().get_all_products()
         single_product = [
             product for product in products if product['product_id'] == product_id]
         if not single_product:
@@ -77,6 +75,7 @@ class ViewSingleProduct(Resource):
     @admin_required
     def put(self,product_id): 
         """Update product."""
+        products = Products().get_all_products()
         data = request.get_json(force=True)
         product_name = data["product_name"]
         category_id = data["category_id"]
@@ -95,6 +94,7 @@ class ViewSingleProduct(Resource):
     @admin_required
     def delete(self,product_id): 
         """Delete product."""
+        products = Products().get_all_products()
         product=[product for product in products if product['product_id']==product_id]
         if not product:
             return make_response(jsonify({'Error':"Product Not found"}), 400)
@@ -106,6 +106,7 @@ class ViewSalesRecord(Resource):
     
     @jwt_required
     def get(self):
+        sales_record=Sales().get_all_sales()
         """Get all sales' records."""
         if not sales_record:
             return make_response(jsonify({"Message": "No Available sales records"}), 200)
@@ -115,6 +116,8 @@ class ViewSalesRecord(Resource):
     @admin_required
     def post(self):
         """ Make a new sale record."""
+        sales_record=Sales().get_all_sales()
+        products = Products().get_all_products()
         current_date = str(date.today())
         data = request.get_json(force=True)
         #Validate().validate_empty_sales_inputs(data)
@@ -159,6 +162,7 @@ class SingleSale(Resource):
     @admin_required
     def get(self,sale_id):
         """ Get single sale record."""
+        sales_record=Sales().get_all_sales()
         single_sale = [
             sale for sale in sales_record if sale['sale_id'] == sale_id]
         if single_sale:
@@ -169,6 +173,7 @@ class ProductCategories(Resource):
     @jwt_required
     @admin_required
     def get(self):
+        categories=Categories().get_all_categories()
         """Get all products' Categories."""
         if not categories:
             return make_response(jsonify({"Message": "No Available products categories"}), 200)
@@ -179,6 +184,7 @@ class ProductCategories(Resource):
     @admin_required
     def post(self):
         """Add a new product category."""
+        categories=Categories().get_all_categories()
         data = request.get_json(force=True) 
         category_id = len(categories)+1
         category_name = data["category_name"]
@@ -199,6 +205,7 @@ class SinleProductCategory(Resource):
     @admin_required
     def put(self,category_id): 
         """Update product."""
+        categories=Categories().get_all_categories()
         data = request.get_json(force=True)
         category_name = data["category_name"]
    
@@ -209,11 +216,12 @@ class SinleProductCategory(Resource):
         new_category.update_product_category(category_id,category_name)
     
         return make_response(jsonify({'Message':"{} Updated Successfuly".format(product_category[0]['category_name'])}), 200) #ok
-        
+
     @jwt_required
     @admin_required
     def delete(self,category_id):
         """Delete product."""
+        categories=Categories().get_all_categories()
         product_category=[category for category in categories if category['category_id']==category_id]
         if not product_category:
             return make_response(jsonify({'Error':"Category Not found"}), 400)

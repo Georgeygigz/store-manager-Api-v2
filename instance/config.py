@@ -14,7 +14,7 @@ class TestingConfig(Config):
     '''Testing app configurations'''
     TESTING = True
     DEBUG = True
-    DATABASE_URL = os.getenv('DATABASE_URL')#("dbname='test_store_manager' user='postgres' host='localhost' port=5432 password='g@_gigz-2416'")
+    DATABASE_URL = os.getenv('TEST_DATABASE_URL')#("dbname='test_store_manager' user='postgres' host='localhost' port=5432 password='g@_gigz-2416'")
 
 class ReleaseConfig(Config):
     '''Releasing app configurations'''

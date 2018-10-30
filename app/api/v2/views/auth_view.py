@@ -14,7 +14,7 @@ from app.api.v2.models.store_model import Users
 from app.api.v2.utils.utils import Validate
 from app.api.v2.utils.authorization import admin_required
 
-users =Users().get_all_users()
+
 
 class CreateAccount(Resource):
     """Create a new account."""
@@ -22,12 +22,14 @@ class CreateAccount(Resource):
     #@admin_required
     def post(self):
         """Create an account for new user."""
+        users =Users().get_all_users()
         data = request.get_json(force=True)
         user_id = len(users)+1
         username = data["username"]
         email = data["email"]
         password = data["password"]
         role = data["role"]
+        
         single_user=[user for user in users if user['email']==request.json['email']]
         if not re.match(r'^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$', request.json['email']):
             return make_response(jsonify({"message": "invalid Email"}), 401)
@@ -51,6 +53,7 @@ class CreateAccount(Resource):
 class Login(Resource):
     """Login Endpoint."""
     def post(self):
+        users =Users().get_all_users()
         data = request.get_json(force=True)
         email=data['email']
         get_password=data['password']

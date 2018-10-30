@@ -5,6 +5,7 @@ import psycopg2
 import os
 from app.dbconn import create_tables
 db_url=os.getenv("DATABASE_URL")
+#db_url="dbname='store_manager' user='postgres' host='localhost' port=5432 password='g@_gigz-2416'"
 
 
 '''Create a new connection '''

@@ -191,6 +191,7 @@ class Users:
         query = "INSERT INTO users (user_id, username,email, password,user_type) VALUES (%s,%s,%s,%s,%s);"
         curr.execute(query, (user_id, username, email, password, role))
         database.commit()
+        curr.close()
         return {"Message": "User created succefully"}, 201
 
     """Get all users."""
