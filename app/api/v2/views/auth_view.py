@@ -18,8 +18,8 @@ users =Users().get_all_users()
 
 class CreateAccount(Resource):
     """Create a new account."""
-    @jwt_required
-    @admin_required
+    #@jwt_required
+    #@admin_required
     def post(self):
         """Create an account for new user."""
         data = request.get_json(force=True)

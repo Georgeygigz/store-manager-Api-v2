@@ -3,9 +3,9 @@
 '''Creates a connection to the store_manager database '''
 import psycopg2
 import os
-#url=os.getenv("DATABASE_URL")
+url=os.getenv("DATABASE_URL")
 try:
-	conn=psycopg2.connect("dbname='store_manager' user='postgres' host='localhost' port=5432 password='g@_gigz-2416'")
+	conn=psycopg2.connect(url)
 	curr=conn.cursor()
 
 except Exception as e:

@@ -77,3 +77,35 @@ class TestStoreViews(BaseTest):
     def test_invalid_get_product_url(self):
         response = self.invalid_get_product_url()
         self.assertEqual(response.status, '404 NOT FOUND')
+    
+    def test_invalid_prodcut_field_name(self):
+        response=self.invalid_prodcut_field_name()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+
+    def invalid_product_key_name(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+
+    def invalid_sales_field_name(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+
+    def invalid_sales_key_name(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+
+    def invalid_user_field_name(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+           
+
+    def invalid_user_key_name(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201, result['New Product'])
+       
