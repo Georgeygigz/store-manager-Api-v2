@@ -18,7 +18,7 @@ class ViewProducts(Resource):
     def get(self):
         products = Products().get_all_products()
         if not products:
-            return make_response(jsonify({"Message": "No Available products"}), 200)
+            return make_response(jsonify({"message": "No Available products"}), 200)
         return make_response(jsonify({"Available Products": products}), 200)
 
     """Add a new product."""  
@@ -109,7 +109,7 @@ class ViewSalesRecord(Resource):
         sales_record=Sales().get_all_sales()
         """Get all sales' records."""
         if not sales_record:
-            return make_response(jsonify({"Message": "No Available sales records"}), 200)
+            return make_response(jsonify({"message": "No Available sales records"}), 200)
         return {"Sales Record": sales_record}, 200  # ok
 
     @jwt_required

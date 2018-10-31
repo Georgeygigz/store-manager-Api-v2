@@ -48,7 +48,7 @@ class CreateAccount(Resource):
             new_user.insert_new_user(**new_user_detail)
             return make_response(jsonify({"message": "Account created successfuly"}), 201)
 
-        return make_response(jsonify({"Message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
+        return make_response(jsonify({"message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
 
 class Login(Resource):
     """Login Endpoint."""

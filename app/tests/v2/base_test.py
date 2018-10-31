@@ -3,7 +3,8 @@ import unittest
 import json
 import jwt
 from app import create_app
-from app.store_database import create_table, destory
+from manage import Database
+data_base=Database()
 
 '''Creating a new testing  class'''
 
@@ -12,7 +13,7 @@ class BaseTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app().test_client()
         self.app.testing = True
-        create_table()
+        data_base.create_table()
         self.products = {
             "product_id": 1,
             "product_name": "Bread",
@@ -37,11 +38,18 @@ class BaseTest(unittest.TestCase):
             "username": 'mary',
             "email": "mary@gmail.com",
             "password": "maR#@Y_123",
-            "role": "user"
+            "role": "attedant"
+        }
+        self.admin = {
+            "user_id": 1,
+            "username": 'george',
+            "email": "george@gmail.com",
+            "password": "maR#@Y_123",
+            "role": "Admin"
         }
         self.user1 = {
             "email": "mary@gmail.com",
-            "password": "maR#@Y_123",
+            "password": "maR#@Y_123"
         }
         self.invalid_product_values = {
             "product_id": 1,
@@ -111,6 +119,16 @@ class BaseTest(unittest.TestCase):
         result = json.loads(response.data.decode('utf-8'))
         return result
 
+    def admin_login(self):
+        self.app.post('/api/v2/auth/register',
+                         data=json.dumps(self.admin), content_type='application/json')
+
+        response = self.app.post('/api/v2/auth/login',
+                                 data=json.dumps({"email": "george@gmail.com","password": "maR#@Y_123"}))
+        result = json.loads(response.data.decode('utf-8'))
+        return result
+
+
     def get_user_token(self):
         '''Generate Token'''
         resp_login = self.user_login()
@@ -118,21 +136,18 @@ class BaseTest(unittest.TestCase):
 
         return token
 
-    def get_all_products(self):
-        """Test get all products."""
-        access_token = self.get_user_token()
-        response = self.app.get(
-            '/api/v2/products',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token}
-        )
+    def get_admin_token(self):
+        '''Generate Token'''
+        resp_login = self.admin_login()
+        token = resp_login.get("token")
 
-        return response
+        return token
+
 
     def add_new_product(self):
         """Test add new product."""
         with self.app:
-            access_token = self.get_user_token()
+            access_token = self.get_admin_token()
             response = self.app.post(
                 '/api/v2/products',
                 headers={"content_type": 'application/json',
@@ -140,6 +155,17 @@ class BaseTest(unittest.TestCase):
                 data=json.dumps(self.products))
 
             return response
+            
+    def get_all_products(self):
+        """Test get all products."""
+        access_token = self.get_user_token()
+        response = self.app.get(
+            '/api/v2/products',
+            headers={"content_type": 'application/json',
+                     "Authorization": "Bearer "  + access_token}
+        )
+
+        return response
 
     def fetch_single_product(self):
         '''Test fetch for single product [GET request]'''
@@ -164,11 +190,19 @@ class BaseTest(unittest.TestCase):
 
     def product_exist(self):
         """Test add new product."""
-        access_token = self.get_user_token()
-        resp = self.app.get(
-            '/api/v2/sales',
+        access_token = self.get_admin_token()
+        resp = self.app.post(
+            '/api/v2/products',
             headers={"content_type": 'application/json',
                      "Authorization": 'Bearer ' + access_token},
+            data=json.dumps({
+            "product_id": 1,
+            "product_name": "Bread",
+            "category_id": 1,
+            "stock_amount": 2000,
+            "price": 20,
+            "low_inventory_stock": 2
+        })
         )
         return resp
 
@@ -177,15 +211,15 @@ class BaseTest(unittest.TestCase):
         access_token = self.get_user_token()
         response = self.app.post(
             '/api/v2/sales',
-            data=json.dumps(self.sales),
             headers={"content_type": 'application/json',
                      "Authorization": 'Bearer ' + access_token},
+            data=json.dumps(self.sales),
         )
         return response
 
     def fetch_single_sale_record(self):
         """Test fetch for single sale record [GET request]."""
-        access_token = self.get_user_token()
+        access_token = self.get_admin_token()
         resp = self.app.get(
             '/api/v2/sales/1',
             headers={"content_type": 'application/json',
@@ -194,7 +228,7 @@ class BaseTest(unittest.TestCase):
         return resp
 
     def items_outof_range_record(self):
-        """Test fetch for single sale record [GET request]."""
+        """Test item out of range [GET request]."""
         access_token = self.get_user_token()
         resp = self.app.get(
             '/api/v2/sales/2',
@@ -319,18 +353,5 @@ class BaseTest(unittest.TestCase):
             data=json.dumps(self.invlaid_user_keys),
             content_type='application/json')
 
-    def update_product(self):
-        pass
-
-    
-    def add_category(self):
-        pass
-    
-    def update_category(self):
-        pass
-    
-    def delete_category(self):
-        pass
-
     def tearDown(self):
-        destory()
+            data_base.destory()

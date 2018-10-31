@@ -9,18 +9,17 @@ class TestStoreViews(BaseTest):
     def test_config(self):
         '''Test configurations'''
         self.assertEqual(self.app.testing, True)
+        '''Test add new product'''
+
+    def test_add_new_product(self):
+        response=self.add_new_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 201)
         
     def test_get_all_products(self):
         response=self.get_all_products()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200,
-                         result['Available Products'])
-
-    '''Test add new product'''
-    def test_add_new_product(self):
-        response=self.add_new_product()
-        result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 200,result['message'])
 
     '''Test fetch for specific product'''
 
@@ -28,26 +27,27 @@ class TestStoreViews(BaseTest):
         '''Test fetch for single product [GET request]'''
         response=self.fetch_single_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200, result['Product'])
+        self.assertEqual(response.status_code, 404, result['Error'])
 
     '''Test Get all sales'''
 
     def test_get_all_sales(self):
         response=self.get_all_sales()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200, result['Sales Record'])
+        self.assertEqual(result['message'],"No Available sales records")
+        self.assertEqual(response.status_code, 200)
 
     ''' Test add new product'''
 
     def test_product_exist(self):
         resp=self.product_exist()
         result = json.loads(resp.data.decode('utf-8'))
-        self.assertEqual(resp.status_code, 200, result["Sales Record"])
+        self.assertEqual(resp.status_code, 200, result["message"])
 
     def test_add_new_sale_record(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Sale Record'])
+        self.assertEqual(response.status_code, 201)
 
     '''Test fetch for specific sale record'''
 
@@ -81,31 +81,31 @@ class TestStoreViews(BaseTest):
     def test_invalid_prodcut_field_name(self):
         response=self.invalid_prodcut_field_name()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
 
     def invalid_product_key_name(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
 
     def invalid_sales_field_name(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
 
     def invalid_sales_key_name(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
 
     def invalid_user_field_name(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
            
 
     def invalid_user_key_name(self):
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
        
