@@ -1,16 +1,15 @@
 # app/tests/v1/test_storeviews.py
 import unittest
 import json
-import jwt
 from app import create_app
 from .base_test import BaseTest
 
 class TestStoreViews(BaseTest):
-    def test_user_create_account(self):
+    def test_user_create_account_exist(self):
         response =self.user_create_account()
         self.assertEqual(
-            response.json, {'message': 'Account created successfuly'})
-        self.assertEqual(response.status_code, 201)
+            response.json, {'message': ' mary@gmail.com Aready Exist'})
+        self.assertEqual(response.status_code, 409)
 
     '''Test for invalid email'''
     def test_invalid_email(self):

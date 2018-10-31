@@ -18,8 +18,7 @@ from app.api.v2.utils.authorization import admin_required
 
 class CreateAccount(Resource):
     """Create a new account."""
-    #@jwt_required
-    #@admin_required
+
     def post(self):
         """Create an account for new user."""
         users =Users().get_all_users()
@@ -40,7 +39,7 @@ class CreateAccount(Resource):
         new_user_detail = {"user_id": user_id,
                            "username": username,
                            "email": email,
-                           "password": sha256_crypt.encrypt(password),
+                           "password": sha256_crypt.hash(password),
                            "role": role}
         
         if not single_user :
@@ -48,7 +47,7 @@ class CreateAccount(Resource):
             new_user.insert_new_user(**new_user_detail)
             return make_response(jsonify({"message": "Account created successfuly"}), 201)
 
-        return make_response(jsonify({"Message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
+        return make_response(jsonify({"message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
 
 class Login(Resource):
     """Login Endpoint."""
@@ -71,3 +70,4 @@ class Login(Resource):
             return make_response(jsonify({"message":"Invalid Email. If have not account, register"}))
 
         return result,200
+        
