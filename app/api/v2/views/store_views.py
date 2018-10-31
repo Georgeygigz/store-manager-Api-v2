@@ -30,7 +30,7 @@ class ViewProducts(Resource):
         data = request.get_json(force=True)
         Validate().validate_empty_product_inputs(data)
         product_id = len(products)+1
-        product_name = data["product_name"]
+        product_name = (data["product_name"]).lower()
         category = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
@@ -84,7 +84,7 @@ class ViewSingleProduct(Resource):
         """Update product."""
         products = Products().get_all_products()
         data = request.get_json(force=True)
-        product_name = data["product_name"]
+        product_name =( data["product_name"]).lower()
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
@@ -140,9 +140,9 @@ class ViewSalesRecord(Resource):
             return {"Message": "{} Out of stock, Please add {} in stock beforemaking a sale".format(request.json['product_name'], request.json['product_name'])}, 200
 
         sale_id = len(sales_record)+1
-        attedant_name = data["attedant_name"]
-        customer_name = data["customer_name"]
-        product_name = data["product_name"]
+        attedant_name = (data["attedant_name"]).lower()
+        customer_name = (data["customer_name"]).lower()
+        product_name = (data["product_name"]).lower()
         price = current_product[0]['price']
         quantity = data["quantity"]
         total_price = price*quantity
@@ -204,7 +204,7 @@ class ProductCategories(Resource):
         categories = Categories().get_all_categories()
         data = request.get_json(force=True)
         category_id = len(categories)+1
-        category_name = data["category_name"]
+        category_name = (data["category_name"]).lower()
         category = [c for c in categories if c['category_name']
                     == request.json['category_name']]
         if category:
@@ -226,7 +226,7 @@ class SinleProductCategory(Resource):
         """Update product."""
         categories = Categories().get_all_categories()
         data = request.get_json(force=True)
-        category_name = data["category_name"]
+        category_name = (data["category_name"]).lower()
 
         product_category = [
             category for category in categories if category['category_id'] == category_id]
