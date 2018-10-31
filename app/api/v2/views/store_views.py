@@ -46,6 +46,8 @@ class ViewProducts(Resource):
 
         if request.json['product_name'] in [n_product['product_name'] for n_product in products]:
             product[0]["stock_amount"] += request.json['stock_amount']
+            update_product=Products()
+            update_product.update_stock_amount(product[0]['product_name'], product[0]['stock_amount'])
             return make_response(jsonify({"Products": product}), 200)  # ok
 
         new_product = {

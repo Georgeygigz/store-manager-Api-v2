@@ -18,7 +18,8 @@ from app.api.v2.utils.authorization import admin_required
 
 class CreateAccount(Resource):
     """Create a new account."""
-
+    @jwt_required
+    @admin_required
     def post(self):
         """Create an account for new user."""
         users =Users().get_all_users()

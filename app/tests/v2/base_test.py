@@ -322,8 +322,6 @@ class BaseTest(unittest.TestCase):
         
         )
         return response
-
-
     def tearDown(self):
             data_base.destory()
             
