@@ -56,6 +56,19 @@ class Products():
             return {"Message": "Product Updated successfully"}, 201
         except Exception as e:
             print(e)
+    
+    def update_stock_amount(self, product_name, stock_amount):
+        """Update Product."""
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "UPDATE products SET stock_amount=%s WHERE product_name=%s;"
+            curr.execute(query, (stock_amount,product_name))
+            database.commit()
+            curr.close()
+            return {"Message": "Product Updated successfully"}, 201
+        except Exception as e:
+            print(e)
 
     def delete_product(self, product_id):
         """Delete Product."""
@@ -95,7 +108,7 @@ class Sales:
                     "product_price": product_price,
                     "quantity": quantity,
                     "total_price": total_price,
-                    "date_sold": date_sold
+                    "date_sold":str(date_sold)
                 }
                 all_sale_records.append(new_sale)
 

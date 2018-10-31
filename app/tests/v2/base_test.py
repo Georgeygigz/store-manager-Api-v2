@@ -10,6 +10,7 @@ data_base=Database()
 
 
 class BaseTest(unittest.TestCase):
+    data_base.destory()
     def setUp(self):
         self.app = create_app().test_client()
         self.app.testing = True
@@ -48,8 +49,8 @@ class BaseTest(unittest.TestCase):
             "role": "Admin"
         }
         self.user1 = {
-            "email": "mary@gmail.com",
-            "password": "maR#@Y_123"
+            "email": "georgey@gmail.com",
+            "password": "g@_gigz-2416"
         }
         self.invalid_product_values = {
             "product_id": 1,
@@ -106,25 +107,17 @@ class BaseTest(unittest.TestCase):
             "password": "maR#@Y_123",
         }
 
-    def register_user(self):
-        return self.app.post(
-            '/api/v2/auth/register',
-            data=json.dumps(self.user),
-            content_type='application/json')
-
     def user_login(self):
-        self.register_user()
+        
         response = self.app.post('/api/v2/auth/login',
                                  data=json.dumps(self.user1))
         result = json.loads(response.data.decode('utf-8'))
         return result
 
     def admin_login(self):
-        self.app.post('/api/v2/auth/register',
-                         data=json.dumps(self.admin), content_type='application/json')
 
         response = self.app.post('/api/v2/auth/login',
-                                 data=json.dumps({"email": "george@gmail.com","password": "maR#@Y_123"}))
+                                 data=json.dumps({"email": "mary@gmail.com","password": "g@_gigz-2416"}))
         result = json.loads(response.data.decode('utf-8'))
         return result
 
@@ -140,7 +133,6 @@ class BaseTest(unittest.TestCase):
         '''Generate Token'''
         resp_login = self.admin_login()
         token = resp_login.get("token")
-
         return token
 
 
@@ -221,7 +213,7 @@ class BaseTest(unittest.TestCase):
         """Test fetch for single sale record [GET request]."""
         access_token = self.get_admin_token()
         resp = self.app.get(
-            '/api/v2/sales/1',
+            '/api/v2/sales/3',
             headers={"content_type": 'application/json',
                      "Authorization": 'Bearer ' + access_token},
         )
@@ -237,12 +229,6 @@ class BaseTest(unittest.TestCase):
         )
         return resp
 
-    def delete_product(self):
-        """Test delete for a specific order API Endpoint [DELETE Request]."""
-        access_token = self.get_user_token()
-        return self.app.delete('app/v2/products/1',
-                               headers={"content_type": 'application/json',
-                                        "Authorization": 'Bearer ' + access_token},)
 
     def invalid_post_product_url(self):
         """Test invalid post url."""
@@ -301,7 +287,7 @@ class BaseTest(unittest.TestCase):
 
     def invalid_prodcut_field_name(self):
         with self.app:
-            access_token = self.get_user_token()
+            access_token = self.get_admin_token()
             response = self.app.post(
                 '/api/v2/products',
                 headers={"content_type": 'application/json',
@@ -312,7 +298,7 @@ class BaseTest(unittest.TestCase):
 
     def invalid_product_key_name(self):
         with self.app:
-            access_token = self.get_user_token()
+            access_token = self.get_admin_token()
             response = self.app.post(
                 '/api/v2/products',
                 headers={"content_type": 'application/json',

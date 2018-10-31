@@ -40,7 +40,7 @@ class CreateAccount(Resource):
         new_user_detail = {"user_id": user_id,
                            "username": username,
                            "email": email,
-                           "password": sha256_crypt.encrypt(password),
+                           "password": sha256_crypt.hash(password),
                            "role": role}
         
         if not single_user :

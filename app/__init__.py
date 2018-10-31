@@ -13,7 +13,9 @@ from app.api.v2.models.store_model import Users
 # local imports
 from manage import Database
 db=Database()
+db.destory()
 db.create_table()
+           
 from instance.config import app_configuration
 from app.api.v2.views.store_views import (
     ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleSale, ProductCategories, SinleProductCategory)
@@ -26,7 +28,6 @@ blueprint = Blueprint('product', __name__, url_prefix='/api/v2')
 app_api = Api(blueprint)
 jwt = JWTManager()
 def create_app():
-
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_configuration['development'])
     app.register_blueprint(blueprint)

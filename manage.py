@@ -1,6 +1,6 @@
 import psycopg2
 import os
-
+from app.api.v2.models.store_model import Users
 from dbconn import create_tables
 class Database:
     def __init__(self):
@@ -13,9 +13,14 @@ class Database:
             for query in create_tables:
                 self.curr.execute(query)
             self.conn.commit()
+            attedant=Users()
+            attedant.insert_new_user(1,'george',"georgey@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","attedant")
+            admin=Users()
+            admin.insert_new_user(2,'mary',"mary@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","admin")
             self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
             print(e)
+        
 
     ''' Destroying the tables'''
     def destory(self):

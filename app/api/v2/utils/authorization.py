@@ -12,11 +12,10 @@ def admin_required(func):
     @wraps(func)
     def wrapper_function(*args, **kwargs):
         cur_user=[user for user in users if user['email']==get_jwt_identity()]
+        print(cur_user)
         user_role=cur_user[0]['role']
-        if not cur_user:
-            if user_role != 'Admin':
-                return {'message': 'This activity can be completed by Admin only'}, 401
-            return{"message":"user doesnt exist"}
+        if user_role != 'Admin':
+            return {'message': 'This activity can be completed by Admin only'}, 401
         return func(*args, **kwargs)
     return wrapper_function
 
@@ -26,10 +25,9 @@ def store_attendant_required(func):
     @wraps(func)
     def wrapper_function(*args, **kwargs):
         cur_user=[user for user in users if user['email']==get_jwt_identity()]
+        print(cur_user)
         user_role=cur_user[0]['role']
-        if not cur_user:
-            if user_role != 'attedant':
-                return {'message': 'This activity can be completed by Store Attedant only'}, 401
-            return{"message":"user doesnt exist"}
+        if user_role != 'attedant':
+            return {'message': 'This activity can be completed by Store Attedant only'}, 401
         return func(*args, **kwargs)
     return wrapper_function
