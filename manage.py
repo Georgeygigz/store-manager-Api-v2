@@ -4,7 +4,7 @@ from app.api.v2.models.store_model import Users
 from dbconn import create_tables
 class Database:
     def __init__(self):
-        self.conn=psycopg2.connect(os.getenv("DATABASE_URl"))
+        self.conn=psycopg2.connect(os.getenv("DATABASE_URL"))
         self.curr=self.conn.cursor()
 
 
