@@ -31,3 +31,4 @@ def store_attendant_required(func):
             return {'message': 'This activity can be completed by Store Attedant only'}, 401
         return func(*args, **kwargs)
     return wrapper_function
+    

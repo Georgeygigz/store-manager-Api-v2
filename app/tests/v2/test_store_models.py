@@ -21,4 +21,3 @@ class TestProductsModels(unittest.TestCase):
         self.assertEqual(self.sales.get_all_sales(),[])
         self.assertEqual(self.available_users.get_all_users(),[])
         
-        

@@ -70,3 +70,4 @@ class Login(Resource):
             return make_response(jsonify({"message":"Invalid Email. If have not account, register"}))
 
         return result,200
+        

@@ -41,4 +41,3 @@ class Database:
 if __name__ == '__main__':
     Database().destory()
     Database().create_table()
-

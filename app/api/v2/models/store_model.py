@@ -225,5 +225,3 @@ class Users:
                      "role": role}
             all_users.append(users)
         return all_users
-
-
