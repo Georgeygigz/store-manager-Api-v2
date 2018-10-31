@@ -16,7 +16,7 @@ class Database:
             attedant=Users()
             attedant.insert_new_user(1,'george',"georgey@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","attedant")
             admin=Users()
-            admin.insert_new_user(2,'mary',"mary@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","admin")
+            admin.insert_new_user(2,'mary',"mary@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","Admin")
             self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
             print(e)

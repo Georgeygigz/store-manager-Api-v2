@@ -17,8 +17,8 @@ class TestProductsModels(unittest.TestCase):
 
     def test_available_data(self):
         """Test for available records."""
-        # self.assertEqual(self.products.get_all_products(),[])
-        # self.assertEqual(self.sales.get_all_sales(),[])
-        # self.assertEqual(self.available_users.get_all_users(),[])
-        pass
+        self.assertEqual(self.products.get_all_products(),[])
+        self.assertEqual(self.sales.get_all_sales(),[])
+        self.assertEqual(self.available_users.get_all_users(),[])
+        
         

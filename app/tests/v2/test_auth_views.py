@@ -1,7 +1,6 @@
 # app/tests/v1/test_storeviews.py
 import unittest
 import json
-import jwt
 from app import create_app
 from .base_test import BaseTest
 

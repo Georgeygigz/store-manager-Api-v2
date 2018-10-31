@@ -60,48 +60,7 @@ class BaseTest(unittest.TestCase):
             "price": 20,
             "low_inventory_stock": 2
         }
-        self.invalid_product_keys = {
-            "product_id": 1,
-            "product_na": "Bread",
-            "category_id": 1,
-            "stock_amount": 2000,
-            "price": 20,
-            "low_inventory_stock": 2
-        }
-        self.invalid_sales_value = {
-            "sale_id": 1,
-            "attedant_name": "",
-            "customer_name": "James",
-            "product_name": "Bread",
-            "product_price": 20,
-            "quantity": 3,
-            "total_price": 60,
-            "date_sold": "12-3-2018"
-        }
-        self.invalid_sales_key = {
-            "sale_id": 1,
-            "attedant_na": "mary",
-            "customer_name": "James",
-            "product_name": "Bread",
-            "product_price": 20,
-            "quantity": 3,
-            "total_price": 60,
-            "date_sold": "12-3-2018"
-        }
-        self.invlaid_user_value = {
-            "user_id": 1,
-            "username": 'mary',
-            "email": "mary@gmail.com",
-            "password": "maR#@Y_123",
-            "role": "user"
-        }
-        self.invlaid_user_keys = {
-            "user_id": 1,
-            "username": 'mary',
-            "emai": "mary@gmail.com",
-            "password": "maR#@Y_123",
-            "role": "user"
-        }
+       
         self.invalid_login = {
             "email": "mary@gmail.com",
             "password": "maR#@Y_123",
@@ -126,7 +85,7 @@ class BaseTest(unittest.TestCase):
         '''Generate Token'''
         resp_login = self.user_login()
         token = resp_login.get("token")
-
+        print(token)
         return token
 
     def get_admin_token(self):
@@ -285,59 +244,6 @@ class BaseTest(unittest.TestCase):
         """Test Login."""
         return self.app.post('/api/v2/auth/login', data=json.dumps(self.user))
 
-    def invalid_prodcut_field_name(self):
-        with self.app:
-            access_token = self.get_admin_token()
-            response = self.app.post(
-                '/api/v2/products',
-                headers={"content_type": 'application/json',
-                         "Authorization": 'Bearer ' + access_token},
-                data=json.dumps(self.invalid_product_values))
-
-            return response
-
-    def invalid_product_key_name(self):
-        with self.app:
-            access_token = self.get_admin_token()
-            response = self.app.post(
-                '/api/v2/products',
-                headers={"content_type": 'application/json',
-                         "Authorization": 'Bearer ' + access_token},
-                data=json.dumps(self.invalid_product_keys))
-
-            return response
-
-    def invalid_sales_field_name(self):
-        access_token = self.get_user_token()
-        response = self.app.post(
-            '/api/v2/sales',
-            data=json.dumps(self.invalid_sales_value),
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
-        )
-        return response
-
-    def invalid_sales_key_name(self):
-        access_token = self.get_user_token()
-        response = self.app.post(
-            '/api/v2/sales',
-            data=json.dumps(self.invalid_sales_key),
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
-        )
-        return response
-
-    def invalid_user_field_name(self):
-        return self.app.post(
-            '/api/v2/auth/register',
-            data=json.dumps(self.invlaid_user_value),
-            content_type='application/json')
-
-    def invalid_user_key_name(self):
-        return self.app.post(
-            '/api/v2/auth/register',
-            data=json.dumps(self.invlaid_user_keys),
-            content_type='application/json')
 
     def tearDown(self):
             data_base.destory()
