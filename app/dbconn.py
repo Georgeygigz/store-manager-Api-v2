@@ -3,9 +3,9 @@
 '''Creates a connection to the store_manager database '''
 import psycopg2
 import os
-#url=os.getenv("DATABASE_URL")
+url=os.getenv("DATABASE_URL")
 try:
-	conn=psycopg2.connect("dbname='store_manager' user='postgres' host='localhost' port=5432 password='g@_gigz-2416'")
+	conn=psycopg2.connect(url)
 	curr=conn.cursor()
 
 except Exception as e:
@@ -25,6 +25,7 @@ table_2="""CREATE TABLE IF NOT EXISTS sales(
  	                    sale_id INT PRIMARY KEY,
  	                    attedant_name VARCHAR NOT NULL ,
  	                    customer_name VARCHAR NOT NULL,
+ 	                    product_name VARCHAR NOT NULL,
  	                    product_price FLOAT NOT NULL,
  	                    quantity FLOAT NOT NULL,
  	                    total_price FLOAT NOT NULL,
