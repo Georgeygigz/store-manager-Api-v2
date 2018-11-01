@@ -8,6 +8,7 @@ class Products():
         self.db = conn_db()
 
     def get_all_products(self):
+        """Get all products."""
         conn = self.db
         try:
             curr = conn.cursor()
@@ -197,8 +198,8 @@ class Users:
     def __init__(self):
         self.db = conn_db()
     
-    """Insert new user."""
     def insert_new_user(self, user_id, username, email, password, role):
+        """Insert new user."""
         database = self.db
         curr = database.cursor()
         query = "INSERT INTO users (user_id, username,email, password,user_type) VALUES (%s,%s,%s,%s,%s);"
@@ -207,8 +208,8 @@ class Users:
         curr.close()
         return {"Message": "User created succefully"}, 201
 
-    """Get all users."""
     def get_all_users(self):
+        """Get all users."""
         conn = self.db
         curr = conn.cursor()
         query = """SELECT * FROM users;"""
