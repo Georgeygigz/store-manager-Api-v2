@@ -12,7 +12,7 @@ from app.api.v2.utils.utils import Validate
 from app.api.v2.utils.authorization import (
     admin_required, store_attendant_required)
 
-
+products = Products().get_all_products()
 class ViewProducts(Resource):
     """Get all products."""
     @jwt_required
@@ -31,7 +31,7 @@ class ViewProducts(Resource):
         Validate().validate_empty_product_inputs(data)
         Validate().validate_data_type(data)
         product_id = len(products)+1
-        product_name = (data["product_name"]).lower()
+        product_name = data["product_name"]
         category = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
