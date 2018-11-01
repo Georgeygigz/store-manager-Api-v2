@@ -80,11 +80,9 @@ class UpdateUserRole(Resource):
         users =Users().get_all_users()
         data = request.get_json(force=True)
         role = (data["role"]).lower()
-
         update_user = [user for user in users if user['user_id'] == user_id]
         if not update_user:
             return make_response(jsonify({'Error': "User Not found"}), 400)
         user = Users()
         user.update_user(user_id,role)
         return make_response(jsonify({'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200)
-        

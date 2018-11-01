@@ -249,6 +249,4 @@ class SinleProductCategory(Resource):
             return make_response(jsonify({'Error': "Category Not found"}), 400)
         new_category = Categories()
         new_category.delete_product_category(category_id)
-
-        # ok
         return make_response(jsonify({'Message': "{} Deleted Successfuly".format(product_category[0]['category_name'])}), 200)

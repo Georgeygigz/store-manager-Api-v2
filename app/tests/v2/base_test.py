@@ -11,7 +11,7 @@ data_base=Database()
 
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app().test_client()
+        self.app = create_app('testing').test_client()
         self.app.testing = True
         data_base.create_table()
         self.products = {
