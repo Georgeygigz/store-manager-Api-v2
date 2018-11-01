@@ -12,8 +12,15 @@ release_url = app_configuration['release'].DATABASE_URL
 
 class Database:
     def __init__(self):
-        DATABASE_URL = os.environ['DATABASE_URL']
-        self.conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        try:
+            if config_name == 'testing':
+                self.conn = psycopg2.connect(test_url)
+            if config_name == 'development':
+                self.conn = psycopg2.connect(dev_url)
+            if config_name == 'release':
+                self.conn = psycopg2.connect(release_url)
+        except BaseException:
+            raise "database not connected"
         self.curr = self.conn.cursor()
 
     def create_table(self):
