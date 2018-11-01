@@ -135,7 +135,6 @@ class ViewSalesRecord(Resource):
         products = Products().get_all_products()
         current_date = str(date.today())
         data = request.get_json(force=True)
-        # Validate().validate_empty_sales_inputs(data)
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
         if not current_product or (current_product[0]['stock_amount'] == 0 or request.json['quantity'] > current_product[0]['stock_amount']):
