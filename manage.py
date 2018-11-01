@@ -15,8 +15,8 @@ class Database:
                 self.conn=psycopg2.connect(test_url)
             if config_name=='release':
                 self.conn=psycopg2.connect(release_url)	
-        except Exception as e:
-            raise e
+        except:
+            print("database not connected")
         self.curr=self.conn.cursor()
 
 
