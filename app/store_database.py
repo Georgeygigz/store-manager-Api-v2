@@ -19,5 +19,5 @@ def conn_db():
 			conn=psycopg2.connect(release_url)
 			
 	except Exception as e:
-		raise e
+		return {"Message": e}
 	return conn

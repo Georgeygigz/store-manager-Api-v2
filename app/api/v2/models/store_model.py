@@ -27,7 +27,7 @@ class Products():
             return all_products
 
         except Exception as e:
-            print(e)
+            return {"Message": e}
 
 
     def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
@@ -41,7 +41,7 @@ class Products():
             database.commit()
             return {"Message": "Product added successfully"}, 201
         except Exception as e:
-            print(e)
+            return {"Message": e}
 
 
     def update_product(self, product_id, product_name, category_id, stock_amount, price, low_inventory_stock,):
@@ -55,7 +55,7 @@ class Products():
             database.commit()
             return {"Message": "Product Updated successfully"}, 201
         except Exception as e:
-            print(e)
+            return {"Message": e}
     
     def update_stock_amount(self, product_name, stock_amount):
         """Update Product."""
@@ -68,7 +68,7 @@ class Products():
             curr.close()
             return {"Message": "Product Updated successfully"}, 201
         except Exception as e:
-            print(e)
+            return {"Message": e}
 
     def delete_product(self, product_id):
         """Delete Product."""
@@ -176,7 +176,7 @@ class Categories:
             database.commit()
             return {"Message": "Category Updated successfully"}, 201
         except Exception as e:
-            print(e)
+            return {"Message": e}
     
     
     def delete_product_category(self, category_id):
@@ -236,5 +236,5 @@ class Users:
             database.commit()
             return {"Message": "Category Updated successfully"}, 201
         except Exception as e:
-            print(e)
+            return {"Message": e}
             

@@ -16,7 +16,7 @@ class Database:
             if config_name=='release':
                 self.conn=psycopg2.connect(release_url)	
         except:
-            print("database not connected")
+            raise "database not connected"
         self.curr=self.conn.cursor()
 
 
@@ -31,7 +31,7 @@ class Database:
             admin.insert_new_user(2,'mary',"mary@gmail.com","$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68","Admin")
             self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
-            print(e)
+            return e
         
 
     ''' Destroying the tables'''
@@ -47,7 +47,7 @@ class Database:
             self.conn.commit()
             self.conn.close
         except Exception as e:
-            print(e)
+            return e
 
 
 if __name__ == '__main__':
