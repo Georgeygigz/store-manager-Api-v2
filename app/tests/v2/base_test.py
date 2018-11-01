@@ -103,7 +103,6 @@ class BaseTest(unittest.TestCase):
         return result
 
     def admin_login(self):
-
         response = self.app.post('/api/v2/auth/login',
                                  data=json.dumps({"email": "mary@gmail.com","password": "g@_gigz-2416"}))
         result = json.loads(response.data.decode('utf-8'))
@@ -111,23 +110,16 @@ class BaseTest(unittest.TestCase):
 
 
     def get_user_token(self):
-        '''Generate Token'''
         resp_login = self.user_login()
         token = resp_login.get("token")
         return token
 
     def get_admin_token(self):
-        '''Generate Token'''
         resp_login = self.admin_login()
         token = resp_login.get("token")
         return token
 
-
-
-    '''Test add new product'''
-
     def add_new_product(self):
-
         access_token=self.get_admin_token()
         response = self.app.post(
             '/api/v2/products',
@@ -147,7 +139,7 @@ class BaseTest(unittest.TestCase):
         
         )
         return response
-        '''Test get all products'''
+
     def get_all_products(self):
         self.add_new_product()
         access_token=self.get_user_token()
@@ -175,10 +167,7 @@ class BaseTest(unittest.TestCase):
         )
         return response
 
-    '''Test fetch for specific product'''
-
     def fetch_single_product(self):
-        '''Test fetch for single product [GET request]'''
         self.add_new_product()
         access_token=self.get_user_token()
         response = self.app.get(
@@ -186,7 +175,6 @@ class BaseTest(unittest.TestCase):
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return response
-
 
     def add_new_sale_record(self):
         self.add_new_product()
@@ -198,8 +186,6 @@ class BaseTest(unittest.TestCase):
         )
         return response
 
-    '''Test Get all sales'''
-
     def get_all_sales(self):
         self.add_new_sale_record()
         access_token=self.get_user_token()
@@ -209,10 +195,7 @@ class BaseTest(unittest.TestCase):
         )
         return response
 
-    '''Test fetch for specific sale record'''
-
     def fetch_single_sale_record(self):
-        '''Test fetch for single sale record [GET request]'''
         self.add_new_sale_record()
         access_token=self.get_admin_token()
         resp = self.app.get(
@@ -222,15 +205,12 @@ class BaseTest(unittest.TestCase):
         return resp
 
     def items_outof_range_record(self):
-        '''Test fetch for single sale record [GET request]'''
         access_token=self.get_admin_token()
         resp = self.app.get(
             '/api/v2/sales/2',
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return resp
-
-    '''Test invalid post url'''
 
     def invalid_post_product_url(self):
         response = self.app.post(
@@ -239,6 +219,7 @@ class BaseTest(unittest.TestCase):
             headers={'content_type': 'application/json'}
         )
         return response
+
     def invalid_get_product_url(self):
         response = self.app.get(
             '/api/v2//productss/',
@@ -269,18 +250,15 @@ class BaseTest(unittest.TestCase):
             "email": "marry@gmail.com",
             "password": "maR#@Y_123",
             "role": "attedant"
-        })
-        
-        )
+        }))
         return response
+
     def check_invalid_email(self):
         access_token=self.get_admin_token()
         response = self.app.post(
             '/api/v2/auth/register',
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
-            data=json.dumps(self.user_invalid_email)
-        
-        )
+            data=json.dumps(self.user_invalid_email))
         return response
 
     def check_invalid_password(self):
@@ -288,9 +266,7 @@ class BaseTest(unittest.TestCase):
         response = self.app.post(
             '/api/v2/auth/register',
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
-            data=json.dumps(self.user_invalid_password)
-        
-        )
+            data=json.dumps(self.user_invalid_password))
         return response
 
     def check_login(self):
@@ -298,9 +274,7 @@ class BaseTest(unittest.TestCase):
         response = self.app.post(
             '/api/v2/auth/login',
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
-            data=json.dumps(self.user1)
-        
-        )
+            data=json.dumps(self.user1))
         return response
 
     def login_with_invalid_password(self):
