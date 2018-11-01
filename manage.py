@@ -7,8 +7,6 @@ from instance.config import app_configuration
 config_name = os.getenv("APP_SETTINGS")
 dev_url = app_configuration['development'].DATA_BASE_URL
 test_url = app_configuration['testing'].DATABASE_URL
-release_url = app_configuration['release'].DATABASE_URL
-
 
 class Database:
     def __init__(self):
@@ -17,8 +15,6 @@ class Database:
                 self.conn = psycopg2.connect(test_url)
             if config_name == 'development':
                 self.conn = psycopg2.connect(dev_url)
-            if config_name == 'release':
-                self.conn = psycopg2.connect(release_url)
         except BaseException:
             raise "database not connected"
         self.curr = self.conn.cursor()

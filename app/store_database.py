@@ -8,7 +8,7 @@ from instance.config import app_configuration
 config_name = os.getenv("APP_SETTINGS")
 dev_url=app_configuration['development'].DATA_BASE_URL
 test_url=app_configuration['testing'].DATABASE_URL
-release_url=  app_configuration['release'].DATABASE_URL
+
 
 '''Create a new connection '''
 def conn_db():
@@ -16,10 +16,7 @@ def conn_db():
 		if config_name=='testing':
 			conn=psycopg2.connect(test_url)
 		if config_name=='development':
-			conn=psycopg2.connect(dev_url)
-		if config_name=='release':
-			conn=psycopg2.connect(release_url)
-			
+			conn=psycopg2.connect(dev_url)			
 	except Exception as e:
 		return {"Message": e}
 	return conn
