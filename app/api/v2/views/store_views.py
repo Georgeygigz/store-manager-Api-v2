@@ -40,7 +40,6 @@ class ViewProducts(Resource):
                    == request.json['product_name']]
         
         if (not request.json or not "product_name" in request.json):
-            # not found
             return make_response(jsonify({'Error': "Request Not found"}), 404)
 
         if type(request.json['stock_amount'])not in [int, float]:
@@ -63,8 +62,6 @@ class ViewProducts(Resource):
 
         new_pro = Products()
         new_pro.insert_new_product(**new_product)
-
-        # created
         return make_response(jsonify({"New Product": new_product}), 201)
 
 
@@ -76,7 +73,6 @@ class ViewSingleProduct(Resource):
         single_product = [
             product for product in products if product['product_id'] == product_id]
         if not single_product:
-            # Not found
             return make_response(jsonify({"Error": "Product Not Found"}), 404)
         return make_response(jsonify({"Product": single_product}), 200)  # ok
 
@@ -98,8 +94,6 @@ class ViewSingleProduct(Resource):
         new_pro = Products()
         new_pro.update_product(
             product_id, product_name, category_id, stock_amount, price, low_inventory_stock)
-
-        # ok
         return make_response(jsonify({'Message': "{} Updated Successfuly".format(product[0]['product_name'])}), 200)
 
     @jwt_required
@@ -113,7 +107,6 @@ class ViewSingleProduct(Resource):
             return make_response(jsonify({'Error': "Product Not found"}), 400)
         new_pro = Products()
         new_pro.delete_product(product_id)
-        # ok
         return make_response(jsonify({'Message': "Deleted Successfuly"}), 200)
 
 
@@ -135,7 +128,6 @@ class ViewSalesRecord(Resource):
         products = Products().get_all_products()
         current_date = str(date.today())
         data = request.get_json(force=True)
-        # Validate().validate_empty_sales_inputs(data)
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
         if not current_product or (current_product[0]['stock_amount'] == 0 or request.json['quantity'] > current_product[0]['stock_amount']):
@@ -154,7 +146,6 @@ class ViewSalesRecord(Resource):
             return {'Error': "Request Not found"}, 400  # not found
 
         if request.json['product_name'] in [sale['product_name'] for sale in sales_record]:
-            # ok
             return {"Message": "{} Exist in cart".format(request.json['product_name'])}, 200
 
         new_sale = {
