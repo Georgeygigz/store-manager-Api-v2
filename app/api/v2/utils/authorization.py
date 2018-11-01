@@ -11,11 +11,14 @@ def admin_required(func):
     """ Admin Rights."""
     @wraps(func)
     def wrapper_function(*args, **kwargs):
-        cur_user=[user for user in users if user['email']==get_jwt_identity()]
-        user_role=cur_user[0]['role']
-        if user_role != 'Admin':
-            return {'message': 'This activity can be completed by Admin only'}, 403
-        return func(*args, **kwargs)
+        try:
+            cur_user=[user for user in users if user['email']==get_jwt_identity()]
+            user_role=cur_user[0]['role']
+            if user_role != 'Admin':
+                return {'message': 'This activity can be completed by Admin only'}, 403
+            return func(*args, **kwargs)
+        except Exception as e:
+            return {"message":e}
     return wrapper_function
 
 
