@@ -3,6 +3,7 @@ asn1crypto==0.24.0
 astroid==2.0.4
 atomicwrites==1.2.1
 attrs==18.2.0
+autopep8==1.4.2
 certifi==2018.10.15
 cffi==1.11.5
 chardet==3.0.4
@@ -29,9 +30,11 @@ passlib==1.7.1
 pluggy==0.7.1
 psycopg2-binary==2.7.5
 py==1.7.0
+pycodestyle==2.4.0
 pycparser==2.19
 pylint==2.1.1
 pytest==3.8.2
+python-dotenv==0.9.1
 pytz==2018.5
 requests==2.19.1
 six==1.11.0
