@@ -16,7 +16,7 @@ class BaseTest(unittest.TestCase):
         data_base.create_table()
         self.products = {
             "product_id": 1,
-            "product_name": "Bread",
+            "product_name": "orange",
             "category_id": 1,
             "stock_amount": 2000,
             "price": 20,
@@ -35,7 +35,7 @@ class BaseTest(unittest.TestCase):
             "sale_id": 1,
             "attedant_name": "Mary",
             "customer_name": "James",
-            "product_name": "Bread",
+            "product_name": "orange",
             "product_price": 20,
             "quantity": 3,
             "total_price": 60,
