@@ -4,6 +4,7 @@ from ....store_database import conn_db
 
 """Model file that interacts with the database."""
 
+
 class Products():
     def __init__(self):
         self.db = conn_db()
@@ -31,7 +32,14 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-    def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
+    def insert_new_product(
+            self,
+            product_id,
+            product_name,
+            category_id,
+            stock_amount,
+            price,
+            low_inventory_stock):
         """Insert New Product."""
         database = self.db
         try:
@@ -44,14 +52,28 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-    def update_product(self, product_id, product_name, category_id, stock_amount, price, low_inventory_stock,):
+    def update_product(
+        self,
+        product_id,
+        product_name,
+        category_id,
+        stock_amount,
+        price,
+        low_inventory_stock,
+    ):
         """Update Product."""
         database = self.db
         try:
             curr = database.cursor()
             query = "UPDATE products SET product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s WHERE product_id=%s;"
-            curr.execute(query, (product_name, category_id,
-                                 stock_amount, price, low_inventory_stock, product_id))
+            curr.execute(
+                query,
+                (product_name,
+                 category_id,
+                 stock_amount,
+                 price,
+                 low_inventory_stock,
+                 product_id))
             database.commit()
             return {"Message": "Product Updated successfully"}, 201
         except Exception as e:
@@ -117,13 +139,30 @@ class Sales:
         except Exception as e:
             return {"Message": e}
 
-    def insert_new_sale(self, sale_id, attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold):
+    def insert_new_sale(
+            self,
+            sale_id,
+            attedant_name,
+            customer_name,
+            product_name,
+            product_price,
+            quantity,
+            total_price,
+            date_sold):
         """Make a new sale Record."""
         database = self.db
         curr = database.cursor()
         query = "INSERT INTO sales (sale_id,attedant_name,customer_name,product_name,product_price,quantity,total_price,date_sold) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
-        curr.execute(query, (sale_id, attedant_name, customer_name,
-                             product_name, product_price, quantity, total_price, date_sold))
+        curr.execute(
+            query,
+            (sale_id,
+             attedant_name,
+             customer_name,
+             product_name,
+             product_price,
+             quantity,
+             total_price,
+             date_sold))
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
 

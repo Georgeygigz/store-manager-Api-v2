@@ -10,6 +10,9 @@ install:
 
 services:
   - postgresql
+  
+addons:
+  postgresql: "9.6"
 
 before_script:
   - export APP_SETTINGS=testing
