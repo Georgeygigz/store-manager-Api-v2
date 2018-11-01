@@ -8,6 +8,9 @@ from flask_jwt_extended import JWTManager
 from datetime import timedelta
 from app.api.v2.models.store_model import Users
 import os
+from instance.config import app_configuration, Config
+
+
 
 # local imports
 from manage import Database
@@ -28,7 +31,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_configuration[config_name])
     app.register_blueprint(blueprint)
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+    app.config['JWT_SECRET_KEY'] = Config.SECRET_KEY
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     jwt.init_app(app)
     app_api.add_resource(ViewProducts, '/products')

@@ -66,9 +66,9 @@ class Login(Resource):
                 result={"message":"Login succesful","token":token}
                 
             else:
-                return make_response(jsonify({"message":"Invalid Password"}))
+                return make_response(jsonify({"message":"Invalid Password"}),401)
         else:
-            return make_response(jsonify({"message":"Invalid Email. If have not account, register"}))
+            return make_response(jsonify({"message":"Invalid Email. If have not account, register"}),401)
 
         return result,200
 

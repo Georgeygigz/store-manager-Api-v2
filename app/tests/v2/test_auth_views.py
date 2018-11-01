@@ -45,12 +45,12 @@ class TestStoreViews(BaseTest):
         response = self.login_with_invalid_password()
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'],'Invalid Password')
-        self.assertEqual(response.status_code, 200,result['message'])
+        self.assertEqual(response.status_code, 401,result['message'])
     
     def test_user_login_with_invalid_email(self):
         """Test Login with invalid email."""
         response = self.login_with_invalid_email()
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(result['message'],'Invalid Email. If have not account, register')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 401)
  

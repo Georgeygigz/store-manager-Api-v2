@@ -2,17 +2,19 @@ import psycopg2
 import os
 from app.api.v2.models.store_model import Users
 from dbconn import create_tables
+from instance.config import app_configuration
+
 config_name=os.getenv("APP_SETTINGS")
-dev_url=os.getenv("DATABASE_URL")
-test_url=os.getenv("TEST_DATABASE_URL")
-release_url=os.getenv("RELEASE_DATABASE_URL")
+dev_url=app_configuration['development'].DATA_BASE_URL
+test_url=app_configuration['testing'].DATABASE_URL
+release_url=  app_configuration['release'].DATABASE_URL
 class Database:
     def __init__(self):
         try:
             if config_name=='testing':
-                self.conn=psycopg2.connect(dev_url)
-            if config_name=='development':
                 self.conn=psycopg2.connect(test_url)
+            if config_name=='development':
+                self.conn=psycopg2.connect(dev_url)
             if config_name=='release':
                 self.conn=psycopg2.connect(release_url)	
         except:
