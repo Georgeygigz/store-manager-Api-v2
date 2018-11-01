@@ -22,7 +22,7 @@ class ReleaseConfig(Config):
     """Releasing app configurations"""
     DEBUG = False
     TESTING = False
-    DATABASE_URL=os.getenv("RELEASE_DATABASE_URL")
+    DATABASE_URL="postgres://ldgwxvtdhujucr:d8b43e6d977939322a641322dbd44f5a8a9a9f4d6d67a710bb7bb83fa01e6e26@ec2-54-243-46-32.compute-1.amazonaws.com:5432/d73r5i57ko6q1p"
     
 
 

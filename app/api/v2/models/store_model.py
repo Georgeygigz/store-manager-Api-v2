@@ -3,6 +3,7 @@ from ....store_database import conn_db
 
 
 """Model file that interacts with the database."""
+
 class Products():
     def __init__(self):
         self.db = conn_db()
@@ -30,7 +31,6 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-
     def insert_new_product(self,  product_id, product_name, category_id, stock_amount, price, low_inventory_stock):
         """Insert New Product."""
         database = self.db
@@ -44,7 +44,6 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-
     def update_product(self, product_id, product_name, category_id, stock_amount, price, low_inventory_stock,):
         """Update Product."""
         database = self.db
@@ -57,14 +56,14 @@ class Products():
             return {"Message": "Product Updated successfully"}, 201
         except Exception as e:
             return {"Message": e}
-    
+
     def update_stock_amount(self, product_name, stock_amount):
         """Update Product."""
         database = self.db
         try:
             curr = database.cursor()
             query = "UPDATE products SET stock_amount=%s WHERE product_name=%s;"
-            curr.execute(query, (stock_amount,product_name))
+            curr.execute(query, (stock_amount, product_name))
             database.commit()
             curr.close()
             return {"Message": "Product Updated successfully"}, 201
@@ -87,6 +86,7 @@ class Products():
 
 class Sales:
     """Sales Records."""
+
     def __init__(self):
         self.db = conn_db()
 
@@ -109,15 +109,14 @@ class Sales:
                     "product_price": product_price,
                     "quantity": quantity,
                     "total_price": total_price,
-                    "date_sold":str(date_sold)
+                    "date_sold": str(date_sold)
                 }
                 all_sale_records.append(new_sale)
 
             return all_sale_records
         except Exception as e:
             return {"Message": e}
-    
-    
+
     def insert_new_sale(self, sale_id, attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold):
         """Make a new sale Record."""
         database = self.db
@@ -133,8 +132,7 @@ class Categories:
     def __init__(self):
         """Products' category."""
         self.db = conn_db()
-    
-    
+
     def get_all_categories(self):
         """Get all products' categories"""
         conn = self.db
@@ -157,7 +155,6 @@ class Categories:
         except Exception as e:
             return {"Message": e}
 
-   
     def insert_new_produc_category(self, category_id, category_name):
         """Add new product category."""
         database = self.db
@@ -166,7 +163,7 @@ class Categories:
         curr.execute(query, (category_id, category_name))
         database.commit()
         return {"Message": "Sale record Save succefully"}, 201
-    
+
     def update_product_category(self, category_id, category_name):
         """Update product category."""
         database = self.db
@@ -178,8 +175,7 @@ class Categories:
             return {"Message": "Category Updated successfully"}, 201
         except Exception as e:
             return {"Message": e}
-    
-    
+
     def delete_product_category(self, category_id):
         """Delete Category."""
         database = self.db
@@ -193,11 +189,13 @@ class Categories:
         except Exception as e:
             return {"Message": e}
 
+
 class Users:
     """Users mode."""
+
     def __init__(self):
         self.db = conn_db()
-    
+
     def insert_new_user(self, user_id, username, email, password, role):
         """Insert new user."""
         database = self.db
@@ -226,7 +224,7 @@ class Users:
                      "role": role}
             all_users.append(users)
         return all_users
-   
+
     def update_user(self, user_id, role):
         """Update product category."""
         database = self.db
@@ -238,4 +236,3 @@ class Users:
             return {"Message": "Category Updated successfully"}, 201
         except Exception as e:
             return {"Message": e}
-            
