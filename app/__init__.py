@@ -19,7 +19,7 @@ db.create_table()
 from instance.config import app_configuration
 from app.api.v2.views.store_views import (
     ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleSale, ProductCategories, SinleProductCategory)
-from app.api.v2.views.auth_view import CreateAccount, Login
+from app.api.v2.views.auth_view import CreateAccount, Login,UpdateUserRole
 
 
 
@@ -42,4 +42,5 @@ def create_app():
     app_api.add_resource(SinleProductCategory, '/category/<int:category_id>')
     app_api.add_resource(CreateAccount, '/auth/register')
     app_api.add_resource(Login, '/auth/login')
+    app_api.add_resource(UpdateUserRole, '/auth/role/<int:user_id>')
     return app

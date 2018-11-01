@@ -29,6 +29,7 @@ class ViewProducts(Resource):
         products = Products().get_all_products()
         data = request.get_json(force=True)
         Validate().validate_empty_product_inputs(data)
+        Validate().validate_data_type(data)
         product_id = len(products)+1
         product_name = (data["product_name"]).lower()
         category = data["category_id"]
@@ -37,11 +38,12 @@ class ViewProducts(Resource):
         inventory_stock = data['low_inventory_stock']
         product = [product for product in products if product['product_name']
                    == request.json['product_name']]
+        
         if (not request.json or not "product_name" in request.json):
             # not found
             return make_response(jsonify({'Error': "Request Not found"}), 404)
 
-        if type((request.json['stock_amount']) or (request.json['price'])) not in [int, float]:
+        if type(request.json['stock_amount'])not in [int, float]:
             return make_response(jsonify({"Error": "Require int or float type"}))
 
         if request.json['product_name'] in [n_product['product_name'] for n_product in products]:
@@ -234,8 +236,6 @@ class SinleProductCategory(Resource):
             return make_response(jsonify({'Error': "Category Not found"}), 400)
         new_category = Categories()
         new_category.update_product_category(category_id, category_name)
-
-        # ok
         return make_response(jsonify({'Message': "{} Updated Successfuly".format(product_category[0]['category_name'])}), 200)
 
     @jwt_required

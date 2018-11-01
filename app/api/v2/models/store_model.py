@@ -225,3 +225,15 @@ class Users:
                      "role": role}
             all_users.append(users)
         return all_users
+   
+    def update_user(self, user_id, role):
+        """Update product category."""
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "UPDATE users SET user_type=%s WHERE user_id=%s;"
+            curr.execute(query, (role, user_id))
+            database.commit()
+            return {"Message": "Category Updated successfully"}, 201
+        except Exception as e:
+            print(e)
