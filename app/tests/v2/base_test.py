@@ -204,7 +204,7 @@ class BaseTest(unittest.TestCase):
 
     def add_new_sale_record(self):
         self.add_new_product()
-        access_token=self.get_admin_token()
+        access_token=self.get_user_token()
         response = self.app.post(
             '/api/v2/sales',
             data=json.dumps(self.sales),

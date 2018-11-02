@@ -30,7 +30,7 @@ class Database:
                 'mary',
                 "mary@gmail.com",
                 "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
-                "Admin")
+                "admin")
             self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
             return e

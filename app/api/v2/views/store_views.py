@@ -134,7 +134,7 @@ class ViewSalesRecord(Resource):
         return {"Sales Record": sales_record}, 200  # ok
 
     @jwt_required
-    @admin_required
+    @store_attendant_required
     def post(self):
         """ Make a new sale record."""
         sales_record = Sales().get_all_sales()
@@ -143,11 +143,12 @@ class ViewSalesRecord(Resource):
         data = request.get_json(force=True)
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
-        if not current_product or (
-                current_product[0]['stock_amount'] == 0 or request.json['quantity'] > current_product[0]['stock_amount']):
+        if not current_product or current_product[0]['stock_amount'] == 0 :
             return {
-                "Message": "{} Out of stock, Please add {} in stock beforemaking a sale".format(
-                    request.json['product_name'], request.json['product_name'])}, 200
+                "Message": "{} Out of stock".format(
+                    request.json['product_name'])}, 200
+        if  request.json['quantity'] > current_product[0]['stock_amount']:
+                        return {"Message": "Quantity exeed amount in stock"}, 200
 
         sale_id = len(sales_record) + 1
         attedant_name = (data["attedant_name"]).lower()
