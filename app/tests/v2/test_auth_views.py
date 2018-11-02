@@ -5,26 +5,51 @@ from app import create_app
 from .base_test import BaseTest
 
 class TestStoreViews(BaseTest):
-    def test_user_create_account_exist(self):
-        response =self.user_create_account()
-        self.assertEqual(
-            response.json, {'message': ' mary@gmail.com Aready Exist'})
-        self.assertEqual(response.status_code, 409)
-
-    '''Test for invalid email'''
+    def test_create_account(self):
+        """Test create a new account."""
+        resp=self.user_signup()
+        result = json.loads(resp.data.decode('utf-8'))
+        self.assertEqual(result['message'], 'Account created successfuly')
+        self.assertEqual(resp.status_code, 201)
+    
     def test_invalid_email(self):
-        response = self.invalid_email()
-        self.assertEqual(response.json, {'message': 'invalid Email'})
-        self.assertEqual(response.status_code, 401)
+        """Test for invalid email."""
+        resp=self.check_invalid_email()
+        result = json.loads(resp.data.decode('utf-8'))
+        self.assertEqual(result['message'], 'invalid Email')
+        self.assertEqual(resp.status_code, 401)
 
-    '''Test for invalid password'''
     def test_invalid_password(self):
-        response = self.invalid_password()
-        self.assertEqual(response.json, {'message': 'invalid password'})
-        self.assertEqual(response.status_code, 401)
+        """Test for invalid password."""
+        resp=self.check_invalid_password()
+        result = json.loads(resp.data.decode('utf-8'))
+        self.assertEqual(result['message'], 'invalid password')
+        self.assertEqual(resp.status_code, 401)
 
-    '''Test Login'''
     def test_user_login(self):
-        response = self.user_can_login()
+        """Test Login."""
+        response = self.check_login()
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200,result['message'])
+
+    def test_add_existing_user(self):
+        """Test add existing account."""
+        resp=self.signup_existing_user()
+        result = json.loads(resp.data.decode('utf-8'))
+        self.assertEqual(result['message'], ' marry@gmail.com Aready Exist')
+        self.assertEqual(resp.status_code, 409)
+    
+    def test_user_login_with_invalid_password(self):
+        """Test Login with invalid password"""
+        response = self.login_with_invalid_password()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['message'],'Incorrect Password')
+        self.assertEqual(response.status_code, 401,result['message'])
+    
+    def test_user_login_with_invalid_email(self):
+        """Test Login with invalid email."""
+        response = self.login_with_invalid_email()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['message'],'Incorrect Email. If have not account, contact Admin')
+        self.assertEqual(response.status_code, 401)
+ 

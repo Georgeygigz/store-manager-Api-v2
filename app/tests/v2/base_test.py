@@ -1,4 +1,4 @@
-# app/tests/v1/base_test.py
+# app/tests/v2/base_test.py
 import unittest
 import json
 import jwt
@@ -10,16 +10,23 @@ data_base=Database()
 
 
 class BaseTest(unittest.TestCase):
-    data_base.destory()
     def setUp(self):
-        self.app = create_app().test_client()
+        self.app = create_app('testing').test_client()
         self.app.testing = True
         data_base.create_table()
         self.products = {
             "product_id": 1,
-            "product_name": "Bread",
+            "product_name": "orange",
             "category_id": 1,
             "stock_amount": 2000,
+            "price": 20,
+            "low_inventory_stock": 2
+        }
+        self.invalid_data_types_products = {
+            "product_id": 1,
+            "product_name": "Bread",
+            "category_id": 1,
+            "stock_amount": "2000",
             "price": 20,
             "low_inventory_stock": 2
         }
@@ -28,7 +35,7 @@ class BaseTest(unittest.TestCase):
             "sale_id": 1,
             "attedant_name": "Mary",
             "customer_name": "James",
-            "product_name": "Bread",
+            "product_name": "orange",
             "product_price": 20,
             "quantity": 3,
             "total_price": 60,
@@ -36,8 +43,22 @@ class BaseTest(unittest.TestCase):
 
         self.user = {
             "user_id": 1,
-            "username": 'mary',
-            "email": "mary@gmail.com",
+            "username": 'marry',
+            "email": "marry@gmail.com",
+            "password": "maR#@Y_123",
+            "role": "attedant"
+        }
+        self.user_invalid_password = {
+            "user_id": 1,
+            "username": 'marry',
+            "email": "marry@gmail.com",
+            "password": "manfhf_123",
+            "role": "attedant"
+        }
+        self.user_invalid_email= {
+            "user_id": 1,
+            "username": 'marry',
+            "email": "marrymail.com",
             "password": "maR#@Y_123",
             "role": "attedant"
         }
@@ -50,6 +71,14 @@ class BaseTest(unittest.TestCase):
         }
         self.user1 = {
             "email": "georgey@gmail.com",
+            "password": "g@_gigz-2416"
+        }
+        self.invalid_password = {
+            "email": "georgey@gmail.com",
+            "password": "g@_gigz-"
+        }
+        self.invalid_email = {
+            "email": "gergey@gmail.com",
             "password": "g@_gigz-2416"
         }
         self.invalid_product_values = {
@@ -74,7 +103,6 @@ class BaseTest(unittest.TestCase):
         return result
 
     def admin_login(self):
-
         response = self.app.post('/api/v2/auth/login',
                                  data=json.dumps({"email": "mary@gmail.com","password": "g@_gigz-2416"}))
         result = json.loads(response.data.decode('utf-8'))
@@ -82,115 +110,135 @@ class BaseTest(unittest.TestCase):
 
 
     def get_user_token(self):
-        '''Generate Token'''
         resp_login = self.user_login()
         token = resp_login.get("token")
-        print(token)
         return token
 
     def get_admin_token(self):
-        '''Generate Token'''
         resp_login = self.admin_login()
         token = resp_login.get("token")
         return token
 
-
     def add_new_product(self):
-        """Test add new product."""
-        with self.app:
-            access_token = self.get_admin_token()
-            response = self.app.post(
-                '/api/v2/products',
-                headers={"content_type": 'application/json',
-                         "Authorization": 'Bearer ' + access_token},
-                data=json.dumps(self.products))
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/products',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.products)
+        
+        )
+        return response
+    
+    def update_product(self):
+        self.add_new_product()
+        access_token=self.get_admin_token()
+        response = self.app.put(
+            '/api/v2/products',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.products)
+        
+        )
+        return response
 
-            return response
-            
     def get_all_products(self):
-        """Test get all products."""
-        access_token = self.get_user_token()
+        self.add_new_product()
+        access_token=self.get_user_token()
         response = self.app.get(
             '/api/v2/products',
-            headers={"content_type": 'application/json',
-                     "Authorization": "Bearer "  + access_token}
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
         )
+        return response
 
+    def get_unexisting_products(self):
+        access_token=self.get_user_token()
+        response = self.app.get(
+            '/api/v2/products',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
+        )
+        return response
+
+    def delete_products(self):
+        self.add_new_product()
+        access_token=self.get_admin_token()
+        response = self.app.delete(
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
+        )
+        return response
+
+    def delete_unexisting_products(self):
+        access_token=self.get_admin_token()
+        response = self.app.delete(
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
+        )
+        return response
+    
+    def update_products(self):
+        self.add_new_product()
+        access_token=self.get_admin_token()
+        response = self.app.put(
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.products))
+        return response    
+    
+    def check_invalid_data_type(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/products',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.invalid_data_types_products)
+        
+        )
         return response
 
     def fetch_single_product(self):
-        '''Test fetch for single product [GET request]'''
-        with self.app:
-            access_token = self.get_user_token()
-            response = self.app.get(
-                '/api/v2/products/1',
-                headers={"content_type": 'application/json',
-                         "Authorization": 'Bearer ' + access_token},
-            )
-            return response
-
-    def get_all_sales(self):
-        """Test Get all sales."""
-        access_token = self.get_user_token()
+        self.add_new_product()
+        access_token=self.get_user_token()
         response = self.app.get(
-            '/api/v2/sales',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return response
 
-    def product_exist(self):
-        """Test add new product."""
-        access_token = self.get_admin_token()
-        resp = self.app.post(
-            '/api/v2/products',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
-            data=json.dumps({
-            "product_id": 1,
-            "product_name": "Bread",
-            "category_id": 1,
-            "stock_amount": 2000,
-            "price": 20,
-            "low_inventory_stock": 2
-        })
-        )
-        return resp
-
     def add_new_sale_record(self):
-        """Add new sale record."""
-        access_token = self.get_user_token()
+        self.add_new_product()
+        access_token=self.get_user_token()
         response = self.app.post(
             '/api/v2/sales',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
             data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response
+
+    def get_all_sales(self):
+        self.add_new_sale_record()
+        access_token=self.get_user_token()
+        response = self.app.get(
+            '/api/v2/sales',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return response
 
     def fetch_single_sale_record(self):
-        """Test fetch for single sale record [GET request]."""
-        access_token = self.get_admin_token()
+        self.add_new_sale_record()
+        access_token=self.get_admin_token()
         resp = self.app.get(
-            '/api/v2/sales/3',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
+            '/api/v2/sales/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return resp
 
     def items_outof_range_record(self):
-        """Test item out of range [GET request]."""
-        access_token = self.get_user_token()
+        access_token=self.get_admin_token()
         resp = self.app.get(
             '/api/v2/sales/2',
-            headers={"content_type": 'application/json',
-                     "Authorization": 'Bearer ' + access_token},
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return resp
 
-
     def invalid_post_product_url(self):
-        """Test invalid post url."""
         response = self.app.post(
             '/api/v2/productss/',
             data=json.dumps(self.products),
@@ -205,46 +253,75 @@ class BaseTest(unittest.TestCase):
             headers={'content_type': 'application/json'}
         )
         return response
-
-    def user_create_account(self):
-        return self.app.post(
+    
+    def user_signup(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
             '/api/v2/auth/register',
-            data=json.dumps(self.user),
-            headers={'content_type': 'application/json'}
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.user)
+        
         )
+        return response
 
-    def invalid_email(self):
-        """Test for invalid email."""
-        return self.app.post(
-            'api/v2/auth/register',
-            data=json.dumps(
-                {"user_id": 1,
-                 "username": 'mary',
-                 "email": "marygmail.com",
-                 "password": "maR#@Y_123",
-                 "role": "user"}
-            ),
-            headers={'content_type': 'application/json'}
+    def signup_existing_user(self):
+        self.user_signup()
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/register',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps({
+            "user_id": 1,
+            "username": 'marry',
+            "email": "marry@gmail.com",
+            "password": "maR#@Y_123",
+            "role": "attedant"
+        }))
+        return response
+
+    def check_invalid_email(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/register',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.user_invalid_email))
+        return response
+
+    def check_invalid_password(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/register',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.user_invalid_password))
+        return response
+
+    def check_login(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/login',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.user1))
+        return response
+
+    def login_with_invalid_password(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/login',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.invalid_password)
+        
         )
+        return response
 
-    def invalid_password(self):
-        """Test for invalid password."""
-        return self.app.post(
-            'api/v2/auth/register',
-            data=json.dumps(
-                {"user_id": 1,
-                 "username": 'mary',
-                 "email": "mary@gmail.com",
-                 "password": "maR#@",
-                 "role": "user"}
-            ),
-            headers={'content_type': 'application/json'})
-
-    def user_can_login(self):
-        """Test Login."""
-        return self.app.post('/api/v2/auth/login', data=json.dumps(self.user))
-
-
+    def login_with_invalid_email(self):
+        access_token=self.get_admin_token()
+        response = self.app.post(
+            '/api/v2/auth/login',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.invalid_email)
+        
+        )
+        return response
     def tearDown(self):
             data_base.destory()
             

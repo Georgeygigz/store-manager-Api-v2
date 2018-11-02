@@ -3,12 +3,11 @@
 '''Create new connection'''
 import psycopg2
 import os
-db_url=os.getenv("DATABASE_URL")
+from instance.config import app_configuration
 
-'''Create a new connection '''
+dev_url=app_configuration['development'].DATA_BASE_URL
+
 def conn_db():
-	try:
-		conn=psycopg2.connect(db_url)
-	except Exception as e:
-		raise e
+	"""Create a new connection."""
+	conn=psycopg2.connect(dev_url)
 	return conn
