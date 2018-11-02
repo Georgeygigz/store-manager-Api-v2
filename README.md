@@ -19,6 +19,7 @@ This is a Store Manager Web Application
 | api/v2/category/<int:category_id>|Delete product category|DELETE|
 | api/v2/auth/register|Create user account|POST|
 | api/v2/auth/login|User login |POST|
+| api/v2/auth/role|Update user role login |PUT|
 
 ## TOOLS TO BE USED IN THE CHALLENGE
 1. Server-Side Framework:[Flask Python Framework](http://flask.pocoo.org/)
@@ -37,72 +38,13 @@ This is a Store Manager Web Application
  5.  Then on your terminal write ```flask run``` to start the server
  6. Then on [postman](https://www.getpostman.com/), navigate to this url `api/v2/auth/login`
 
- # How to test the Api Endpoints Locally
 
- 1. [Postman](https://www.getpostman.com/) is used to input data and get the output
+# heroku application Link
 
- 2. After starting the Postman, The following url are used to navigate to the Api Endpoints
-
- 3. To list all products use this url <code>http://127.0.0.1:5000/api/v2/products</code> ensure you select    _GET_ request
-
- 4. To Place add a new product use this url <code>http://127.0.0.1:5000/api/v2/products</code> and select _POST_
-         
-         This is an example of a new order to be placed
-                   {         
-                        "product_name": "orange",
-                        "category_id": 1,
-                        "stock_amount": 200,
-                        "price": 22,
-                        "low_inventory_stock": 4
-            
-                    }
-  
-  5. To get a specific product user this url <code>http://127.0.0.1:5000/ api/v2/products/`<int:product_id>`</code> and select _GET_
-
-  6. To make a new sale record user This URL <code>http://127.0.0.1:5000/api/v2/sales</code> and select _POST_
-      ```
-      Example 
-      
-         {           
-            "attedant_name": "George",
-            "customer_name": "mary",
-            "product_name":"orange",
-            "quantity": 20
-           }
-      ```
-  7. To list all sales records use this url <code>http://127.0.0.1:5000/api/v2/sales</code> ensure you select    _GET_ request
-
-  8. To get a specific product user this url <code>http://127.0.0.1:5000/api/v2/sales/sale_id></code> and select _GET_ request
-
-  9. To  create a new user user This URL <code>http://127.0.0.1:5000/api/v2/auth/register</code> and select _POST_
-      ```
-      Example 
-      
-            {           
-                "username": "george",
-                "email": "george@gmail.com",
-                "password":"g@#$4HDKD",
-                "role": "user"
-             }
-      ``` 
-  9. User can use this URL to login <code>http://127.0.0.1:5000/api/v2/auth/login</code> and select _POST_
-      ```
-      Example 
-      
-           {      
-               
-                "email": "george@gmail.com",
-                "password":"g@#$4HDKD"
-
-            }
-      ``` 
-
-# How to run the application on heroku
-
- Navigate to this [link](https://gigzstoremanager-api-heroku.herokuapp.com/api/v2/products) to run my application on heroku
+ Navigate to this [link](https://storemanagerv2.herokuapp.com/api/v2/auth/login) to run my application on heroku
 
  # View on postman documentation
-
+ Postman documentation[link](https://documenter.getpostman.com/view/5283750/RzZ4pMf1#8d58fbc0-3292-b080-fe59-a9c1c351026b)
 
 # Author
 `Georgey Gigz`
