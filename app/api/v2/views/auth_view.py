@@ -75,10 +75,10 @@ class Login(Resource):
 
             else:
                 return make_response(
-                    jsonify({"message": "Invalid Password"}), 401)
+                    jsonify({"message": "Incorrect Password"}), 401)
         else:
             return make_response(
-                jsonify({"message": "Invalid Email. If have not account, register"}), 401)
+                jsonify({"message": "Incorrect Email. If have not account, contact Admin"}), 401)
 
         return result, 200
 
