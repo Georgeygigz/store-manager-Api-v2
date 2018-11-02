@@ -31,7 +31,7 @@ def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_configuration[config_name])
     app.register_blueprint(blueprint)
-    app.config['JWT_SECRET_KEY'] = Config.SECRET_KEY
+    app.config['JWT_SECRET_KEY'] = "dbskbjdmsdscdscdsdk"
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     jwt.init_app(app)
     app_api.add_resource(ViewProducts, '/products')
