@@ -156,6 +156,14 @@ class BaseTest(unittest.TestCase):
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
         )
         return response
+
+    def get_delete_products(self):
+        access_token=self.get_user_token()
+        response = self.app.get(
+            '/api/v2/products',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
+        )
+        return response
     
     def check_invalid_data_type(self):
         access_token=self.get_admin_token()
