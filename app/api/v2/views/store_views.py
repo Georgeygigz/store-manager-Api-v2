@@ -16,29 +16,29 @@ products = Products().get_all_products()
 
 
 class ViewProducts(Resource):
-    """Get all products."""
     @jwt_required
     def get(self):
+        """Get all products."""
         products = Products().get_all_products()
         if not products:
             return make_response(
                 jsonify({"message": "No Available products"}), 200)
         return make_response(jsonify({"Available Products": products}), 200)
 
-    """Add a new product."""
     @jwt_required
     @admin_required
     def post(self):
+        """Add a new product."""
         products = Products().get_all_products()
         data = request.get_json(force=True)
-        Validate().validate_empty_product_inputs(data)
-        Validate().validate_data_type(data)
         product_id = len(products) + 1
         product_name = data["product_name"]
         category = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
         inventory_stock = data['low_inventory_stock']
+
+
         product = [product for product in products if product['product_name']
                    == request.json['product_name']]
 
@@ -72,9 +72,9 @@ class ViewProducts(Resource):
 
 
 class ViewSingleProduct(Resource):
-    """Fetch single product."""
     @jwt_required
     def get(self, product_id):
+        """Fetch single product."""
         products = Products().get_all_products()
         single_product = [
             product for product in products if product['product_id'] == product_id]
@@ -143,12 +143,12 @@ class ViewSalesRecord(Resource):
         data = request.get_json(force=True)
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
-        if not current_product or current_product[0]['stock_amount'] == 0 :
+        if not current_product or current_product[0]['stock_amount'] == 0:
             return {
                 "Message": "{} Out of stock".format(
                     request.json['product_name'])}, 200
-        if  request.json['quantity'] > current_product[0]['stock_amount']:
-                        return {"Message": "Quantity exeed amount in stock"}, 200
+        if request.json['quantity'] > current_product[0]['stock_amount']:
+            return {"Message": "Quantity exeed amount in stock"}, 200
 
         sale_id = len(sales_record) + 1
         attedant_name = (data["attedant_name"]).lower()

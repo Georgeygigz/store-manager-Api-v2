@@ -11,6 +11,8 @@ class Validate:
             abort(400, description="low inventory stock field should not be empty")
         if data['price'] == "":
             abort(400, description="Price should not be empty")
+        if data['category_id'] == "":
+            abort(400, description="category id should not be empty")
 
     def validate_empty_sales_inputs(self, data):
 
