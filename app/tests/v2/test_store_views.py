@@ -42,6 +42,27 @@ class TestStoreViews(BaseTest):
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200, result['Product'])
 
+    def test_delete_product(self):
+        """Test delete product."""
+        response=self.delete_products()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Message'],'Deleted Successfuly')
+        self.assertEqual(response.status_code, 200)
+
+    def test_delete_unexisting_product(self):
+        """Test delete unexisting product."""
+        response=self.delete_unexisting_products()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Error'],'Product Not found')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_product(self):
+        """Test update product."""
+        response=self.update_products()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Message'],'orange Updated Successfuly')
+        self.assertEqual(response.status_code, 200)
+
     def test_add_new_sale_record(self):
         """Test add new sale record."""
         response=self.add_new_sale_record()

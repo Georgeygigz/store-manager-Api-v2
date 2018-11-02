@@ -157,13 +157,31 @@ class BaseTest(unittest.TestCase):
         )
         return response
 
-    def get_delete_products(self):
-        access_token=self.get_user_token()
-        response = self.app.get(
-            '/api/v2/products',
+    def delete_products(self):
+        self.add_new_product()
+        access_token=self.get_admin_token()
+        response = self.app.delete(
+            '/api/v2/products/1',
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
         )
         return response
+
+    def delete_unexisting_products(self):
+        access_token=self.get_admin_token()
+        response = self.app.delete(
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token}
+        )
+        return response
+    
+    def update_products(self):
+        self.add_new_product()
+        access_token=self.get_admin_token()
+        response = self.app.put(
+            '/api/v2/products/1',
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+            data=json.dumps(self.products))
+        return response    
     
     def check_invalid_data_type(self):
         access_token=self.get_admin_token()
