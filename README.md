@@ -41,7 +41,7 @@ This is a Store Manager Web Application
 
 # heroku application Link
 
- Navigate to this [link](https://storemanagerv2.herokuapp.com/api/v2/login) to run my application on heroku
+ Navigate to this [link](https://storemanagerv2.herokuapp.com/api/v2/auth/login) to run my application on heroku
 
  # View on postman documentation
  Postman documentation[link](https://documenter.getpostman.com/view/5283750/RzZ4pMf1#8d58fbc0-3292-b080-fe59-a9c1c351026b)

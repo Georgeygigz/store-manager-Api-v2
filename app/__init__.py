@@ -2,7 +2,7 @@
 '''
 Register Blueprints
 '''
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint,make_response,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -43,4 +43,17 @@ def create_app(config_name):
     app_api.add_resource(CreateAccount, '/auth/register')
     app_api.add_resource(Login, '/auth/login')
     app_api.add_resource(UpdateUserRole, '/auth/role/<int:user_id>')
+    
+    @app.errorhandler(404)
+    def not_found(e):
+        # defining function
+        return make_response(jsonify({
+            "Message": "Route not found. Please check on the route"
+        }), 404)
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        return make_response(jsonify({
+            "Message": "Internal server"
+        }), 500)
     return app
