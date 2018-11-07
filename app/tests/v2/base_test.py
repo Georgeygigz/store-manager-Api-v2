@@ -6,9 +6,7 @@ from app import create_app
 from manage import Database
 data_base=Database()
 
-'''Creating a new testing  class'''
-
-
+"""Creating a new testing  class."""
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing').test_client()

@@ -241,7 +241,7 @@ class SingleProductCategory(Resource):
     @jwt_required
     @admin_required
     def put(self, category_id):
-        """Update product."""
+        """Update product category."""
         categories = Categories().get_all_categories()
         data = request.get_json(force=True)
         category_name = (data["category_name"]).lower()
@@ -258,7 +258,7 @@ class SingleProductCategory(Resource):
     @jwt_required
     @admin_required
     def delete(self, category_id):
-        """Delete product."""
+        """Delete product category."""
         products = Products().get_all_products()
         categories = Categories().get_all_categories()
         product_category = [

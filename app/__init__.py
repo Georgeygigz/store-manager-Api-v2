@@ -10,8 +10,6 @@ from app.api.v2.models.store_model import Users
 import os
 from instance.config import app_configuration, Config
 
-
-
 # local imports
 from manage import Database
 db=Database()
