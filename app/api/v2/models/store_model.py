@@ -22,7 +22,7 @@ class Products():
                 product_id, product_name, category_id, stock_amount, price, low_inventory_stock = v
                 new_product = {"product_id": product_id,
                                "product_name": product_name,
-                               "category_id": category_id,
+                               "category_id": int(category_id),
                                "stock_amount": stock_amount,
                                "price": price,
                                "low_inventory_stock": low_inventory_stock}

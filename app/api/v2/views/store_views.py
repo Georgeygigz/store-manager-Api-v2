@@ -237,7 +237,7 @@ class ProductCategories(Resource):
         return make_response(jsonify({"Category": new_category}),201) #Created
 
 
-class SinleProductCategory(Resource):
+class SingleProductCategory(Resource):
     @jwt_required
     @admin_required
     def put(self, category_id):
@@ -259,11 +259,17 @@ class SinleProductCategory(Resource):
     @admin_required
     def delete(self, category_id):
         """Delete product."""
+        products = Products().get_all_products()
         categories = Categories().get_all_categories()
         product_category = [
             category for category in categories if category['category_id'] == category_id]
         if not product_category:
             return make_response(jsonify({'Error': "Category Not found"}),  400) #Bad Request
+        single_product=[product for product in products if product['category_id']==category_id]
+        print(single_product)
+        if single_product:                 
+            return make_response(jsonify(
+                {"Message": " {} Category is in use".format(product_category[0]['category_name'])}))
         new_category = Categories()
         new_category.delete_product_category(category_id)
         return make_response(jsonify({'Message': "{} Deleted Successfuly".format(
