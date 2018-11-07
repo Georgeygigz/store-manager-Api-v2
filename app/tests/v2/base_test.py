@@ -40,6 +40,16 @@ class BaseTest(unittest.TestCase):
             "quantity": 3,
             "total_price": 60,
             "date_sold": "12-3-2018"}
+        
+        self.exeed_sales = {
+            "sale_id": 1,
+            "attedant_name": "Mary",
+            "customer_name": "James",
+            "product_name": "orange",
+            "product_price": 20,
+            "quantity": 3000,
+            "total_price": 60,
+            "date_sold": "12-3-2018"}
 
         self.user = {
             "user_id": 1,
@@ -208,6 +218,36 @@ class BaseTest(unittest.TestCase):
         response = self.app.post(
             '/api/v2/sales',
             data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response
+
+    def make_sale_of_unexisting_product(self):
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response
+
+    def check_sale_exist(self):
+        self.add_new_product()
+        self.add_new_sale_record()
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response    
+
+    def make_sale_of_exeding_amount_instock(self):
+        self.add_new_product()
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.exeed_sales),
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return response

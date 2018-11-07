@@ -7,8 +7,7 @@ from flask_restful import Resource
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 # local imports
-from app.api.v2.models.store_model import (Products, Sales, Categories)
-from app.api.v2.utils.utils import Validate
+from app.api.v2.models.store_model import (Products, Sales, Categories,Users)
 from app.api.v2.utils.authorization import (
     admin_required, store_attendant_required)
 
@@ -137,6 +136,9 @@ class ViewSalesRecord(Resource):
     @store_attendant_required
     def post(self):
         """ Make a new sale record."""
+        users= Users().get_all_users()
+        cur_user=[user for user in users if user['email']==get_jwt_identity()]
+        user_name=cur_user[0]['username']
         sales_record = Sales().get_all_sales()
         products = Products().get_all_products()
         current_date = str(date.today())
@@ -151,7 +153,7 @@ class ViewSalesRecord(Resource):
             return {"Message": "Quantity exeed amount in stock"}, 200
 
         sale_id = len(sales_record) + 1
-        attedant_name = (data["attedant_name"]).lower()
+        attedant_name = user_name
         customer_name = (data["customer_name"]).lower()
         product_name = (data["product_name"]).lower()
         price = current_product[0]['price']
@@ -217,13 +219,12 @@ class ProductCategories(Resource):
     @admin_required
     def post(self):
         """Add a new product category."""
-        categories = Categories().get_all_categories()
+        all_categories = Categories().get_all_categories()
         data = request.get_json(force=True)
-        category_id = len(categories) + 1
-        category_name = (data["category_name"]).lower()
-        category = [c for c in categories if c['category_name']
-                    == request.json['category_name']]
-        if category:
+        category_id = len(all_categories) + 1
+        category_name = data["category_name"]
+        if request.json['category_name'] in [category['category_name']
+                                            for category in all_categories]:
             return make_response(jsonify(
                 {"Message": " {} Category Exist".format(request.json['category_name'])}))
         new_category = {
@@ -233,7 +234,7 @@ class ProductCategories(Resource):
         new_cat = Categories()
         new_cat.insert_new_produc_category(**new_category)
 
-        return make_response(jsonify({"Category": new_category}))
+        return make_response(jsonify({"Category": new_category}),201)
 
 
 class SinleProductCategory(Resource):
