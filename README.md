@@ -1,7 +1,7 @@
 # store-manager-Api-v2
 This is a Store Manager Web Application
 
-[![Build Status](https://travis-ci.com/Georgeygigz/store-manager-Api-v2.svg?branch=bg-validation-161636257)](https://travis-ci.com/Georgeygigz/store-manager-Api-v2) [![Coverage Status](https://coveralls.io/repos/github/Georgeygigz/store-manager-Api-v2/badge.svg?branch=develop)](https://coveralls.io/github/Georgeygigz/store-manager-Api-v2?branch=develop)  [![Maintainability](https://api.codeclimate.com/v1/badges/d115bdb3f1e5b48e8d4e/maintainability)](https://codeclimate.com/github/Georgeygigz/store-manager-Api-v2/maintainability)
+[![Build Status](https://travis-ci.com/Georgeygigz/store-manager-Api-v2.svg?branch=bg-validation-161636257)](https://travis-ci.com/Georgeygigz/store-manager-Api-v2) [![Coverage Status](https://coveralls.io/repos/github/Georgeygigz/store-manager-Api-v2/badge.svg?branch=ft-logout-161781515)](https://coveralls.io/github/Georgeygigz/store-manager-Api-v2?branch=ft-logout-161781515)  [![Maintainability](https://api.codeclimate.com/v1/badges/d115bdb3f1e5b48e8d4e/maintainability)](https://codeclimate.com/github/Georgeygigz/store-manager-Api-v2/maintainability)
 
 # This challenge creates a set of API Endpoints listed below
 | EndPoints       | Functionality  | HTTP Method  |
@@ -34,9 +34,9 @@ This is a Store Manager Web Application
  3. `git clone` this  <code>[repo](https://github.com/Georgeygigz/store-manager-api/)</code>
  4.  run `pip install -r requirements.txt` to install the dependencies
  5.  Create a virtal environment
- 5.  Export the environmental variable
- 5.  Then on your terminal write ```flask run``` to start the server
- 6. Then on [postman](https://www.getpostman.com/), navigate to this url `api/v2/auth/login`
+ 6.  Export the environmental variable
+ 7.  Then on your terminal write ```flask run``` to start the server
+ 8. Then on [postman](https://www.getpostman.com/), navigate to this url `api/v2/auth/login`
 
 
 # heroku application Link
