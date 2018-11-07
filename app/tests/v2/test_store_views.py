@@ -68,6 +68,27 @@ class TestStoreViews(BaseTest):
         response=self.add_new_sale_record()
         result = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 201,result['New Sale Record'])
+    
+    def test_add_an_existing_sale_record(self):
+        """Test add new sale record."""
+        response=self.check_sale_exist()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Message'],'orange Exist in cart')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_make_sale_of_unexisting_product(self):
+        """Test add new sale record."""
+        response=self.make_sale_of_unexisting_product()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Message'],'orange Out of stock')
+        self.assertEqual(response.status_code, 200)
+
+    def test_make_sale_of_exeding_amount_instock(self):
+        """Test add new sale record."""
+        response=self.make_sale_of_exeding_amount_instock()
+        result = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(result['Message'],'Quantity exeed amount in stock')
+        self.assertEqual(response.status_code, 200)
 
     def test_get_all_sales(self):
         """Test get all sales records."""

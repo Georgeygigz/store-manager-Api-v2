@@ -1,13 +1,15 @@
 # instance/config.py
 import os
+import sys
 class Config():
     DEBUG=False
     SECRET_KEY=os.getenv("JWT_SECRET_KEY") 
 
 class DevelopmentConfig(Config):
     """Enable our debug mode to True in development in order to auto restart our server on code changes"""
+
     DEBUG = True
-    DATA_BASE_URL=os.getenv("DATABASE_URL")
+    DATA_BASE_URI=os.getenv("DATA_BASE_URI")
 
     
 
@@ -29,3 +31,5 @@ app_configuration={
     'testing': TestingConfig,
     'release': ReleaseConfig,
 }
+
+AppConfig = TestingConfig if 'pytest' in sys.modules else app_configuration.get(os.getenv('FLASK_ENV'),'development')

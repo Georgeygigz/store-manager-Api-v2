@@ -3,12 +3,11 @@ import unittest
 import json
 import jwt
 from app import create_app
+
 from manage import Database
 data_base=Database()
 
-'''Creating a new testing  class'''
-
-
+"""Creating a new testing  class."""
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing').test_client()
@@ -38,6 +37,16 @@ class BaseTest(unittest.TestCase):
             "product_name": "orange",
             "product_price": 20,
             "quantity": 3,
+            "total_price": 60,
+            "date_sold": "12-3-2018"}
+        
+        self.exeed_sales = {
+            "sale_id": 1,
+            "attedant_name": "Mary",
+            "customer_name": "James",
+            "product_name": "orange",
+            "product_price": 20,
+            "quantity": 3000,
             "total_price": 60,
             "date_sold": "12-3-2018"}
 
@@ -104,7 +113,7 @@ class BaseTest(unittest.TestCase):
 
     def admin_login(self):
         response = self.app.post('/api/v2/auth/login',
-                                 data=json.dumps({"email": "mary@gmail.com","password": "g@_gigz-2416"}))
+                                 data=json.dumps({"email": "mary@gmail.com","password": "password"}))
         result = json.loads(response.data.decode('utf-8'))
         return result
 
@@ -208,6 +217,36 @@ class BaseTest(unittest.TestCase):
         response = self.app.post(
             '/api/v2/sales',
             data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response
+
+    def make_sale_of_unexisting_product(self):
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response
+
+    def check_sale_exist(self):
+        self.add_new_product()
+        self.add_new_sale_record()
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.sales),
+            headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
+        )
+        return response    
+
+    def make_sale_of_exeding_amount_instock(self):
+        self.add_new_product()
+        access_token=self.get_user_token()
+        response = self.app.post(
+            '/api/v2/sales',
+            data=json.dumps(self.exeed_sales),
             headers={"content_type":'application/json',"Authorization": "Bearer "  + access_token},
         )
         return response
