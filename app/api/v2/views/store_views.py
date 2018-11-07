@@ -21,8 +21,8 @@ class ViewProducts(Resource):
         products = Products().get_all_products()
         if not products:
             return make_response(
-                jsonify({"message": "No Available products"}), 200)
-        return make_response(jsonify({"Available Products": products}), 200)
+                jsonify({"message": "No Available products"}), 200) #Ok
+        return make_response(jsonify({"Available Products": products}), 200) #Ok
 
     @jwt_required
     @admin_required
@@ -42,7 +42,7 @@ class ViewProducts(Resource):
                    == request.json['product_name']]
 
         if (not request.json or "product_name" not in request.json):
-            return make_response(jsonify({'Error': "Request Not found"}), 404)
+            return make_response(jsonify({'Error': "Request Not found"}), 404)# Not Found
 
         if type(request.json['stock_amount'])not in [int, float]:
             return make_response(
@@ -67,7 +67,7 @@ class ViewProducts(Resource):
 
         new_pro = Products()
         new_pro.insert_new_product(**new_product)
-        return make_response(jsonify({"New Product": new_product}), 201)
+        return make_response(jsonify({"New Product": new_product}), 201) #Created
 
 
 class ViewSingleProduct(Resource):
@@ -78,7 +78,7 @@ class ViewSingleProduct(Resource):
         single_product = [
             product for product in products if product['product_id'] == product_id]
         if not single_product:
-            return make_response(jsonify({"Error": "Product Not Found"}), 404)
+            return make_response(jsonify({"Error": "Product Not Found"}), 400) #Bad Request
         return make_response(jsonify({"Product": single_product}), 200)  # ok
 
     @jwt_required
@@ -95,7 +95,7 @@ class ViewSingleProduct(Resource):
         product = [
             product for product in products if product['product_id'] == product_id]
         if not product:
-            return make_response(jsonify({'Error': "Product Not found"}), 400)
+            return make_response(jsonify({'Error': "Product Not found"}),  400) #Bad Request
         new_pro = Products()
         new_pro.update_product(
             product_id,
@@ -105,7 +105,7 @@ class ViewSingleProduct(Resource):
             price,
             low_inventory_stock)
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(product[0]['product_name'])}), 200)
+            {'Message': "{} Updated Successfuly".format(product[0]['product_name'])}), 200)#Ok
 
     @jwt_required
     @admin_required
@@ -115,10 +115,10 @@ class ViewSingleProduct(Resource):
         product = [
             product for product in products if product['product_id'] == product_id]
         if not product:
-            return make_response(jsonify({'Error': "Product Not found"}), 400)
+            return make_response(jsonify({'Error': "Product Not found"}),  400) #Bad Request
         new_pro = Products()
         new_pro.delete_product(product_id)
-        return make_response(jsonify({'Message': "Deleted Successfuly"}), 200)
+        return make_response(jsonify({'Message': "Deleted Successfuly"}), 200)#ok
 
 
 class ViewSalesRecord(Resource):
@@ -129,7 +129,7 @@ class ViewSalesRecord(Resource):
         """Get all sales' records."""
         if not sales_record:
             return make_response(
-                jsonify({"message": "No Available sales records"}), 200)
+                jsonify({"message": "No Available sales records"}), 200)#Ok
         return {"Sales Record": sales_record}, 200  # ok
 
     @jwt_required
@@ -148,9 +148,9 @@ class ViewSalesRecord(Resource):
         if not current_product or current_product[0]['stock_amount'] == 0:
             return {
                 "Message": "{} Out of stock".format(
-                    request.json['product_name'])}, 200
+                    request.json['product_name'])}, 200 #ok
         if request.json['quantity'] > current_product[0]['stock_amount']:
-            return {"Message": "Quantity exeed amount in stock"}, 200
+            return {"Message": "Quantity exeed amount in stock"}, 200 #ok
 
         sale_id = len(sales_record) + 1
         attedant_name = user_name
@@ -162,13 +162,13 @@ class ViewSalesRecord(Resource):
         date_sold = current_date
 
         if (not request.json or "product_name" not in request.json):
-            return {'Error': "Request Not found"}, 400  # not found
+            return {'Error': "Request Not found"},  400 #Bad Request
 
         if request.json['product_name'] in [sale['product_name']
                                             for sale in sales_record]:
             return {
                 "Message": "{} Exist in cart".format(
-                    request.json['product_name'])}, 200
+                    request.json['product_name'])}, 200 #ok
 
         new_sale = {
             "sale_id": sale_id,
@@ -201,7 +201,7 @@ class SingleSale(Resource):
             sale for sale in sales_record if sale['sale_id'] == sale_id]
         if single_sale:
             return {"Sale": single_sale}, 200  # ok
-        return {"Message": "Sale Not Found"}, 400  # ok
+        return {"Message": "Sale Not Found"},   400 #Bad Request
 
 
 class ProductCategories(Resource):
@@ -212,7 +212,7 @@ class ProductCategories(Resource):
         """Get all products' Categories."""
         if not categories:
             return make_response(
-                jsonify({"Message": "No Available products categories"}), 200)
+                jsonify({"Message": "No Available products categories"}), 200)#ok
         return {"Sales Record": categories}, 200  # ok
 
     @jwt_required
@@ -234,7 +234,7 @@ class ProductCategories(Resource):
         new_cat = Categories()
         new_cat.insert_new_produc_category(**new_category)
 
-        return make_response(jsonify({"Category": new_category}),201)
+        return make_response(jsonify({"Category": new_category}),201) #Created
 
 
 class SinleProductCategory(Resource):
@@ -249,7 +249,7 @@ class SinleProductCategory(Resource):
         product_category = [
             category for category in categories if category['category_id'] == category_id]
         if not product_category:
-            return make_response(jsonify({'Error': "Category Not found"}), 400)
+            return make_response(jsonify({'Error': "Category Not found"}), 400) #Bad Request
         new_category = Categories()
         new_category.update_product_category(category_id, category_name)
         return make_response(jsonify({'Message': "{} Updated Successfuly".format(
@@ -263,8 +263,8 @@ class SinleProductCategory(Resource):
         product_category = [
             category for category in categories if category['category_id'] == category_id]
         if not product_category:
-            return make_response(jsonify({'Error': "Category Not found"}), 400)
+            return make_response(jsonify({'Error': "Category Not found"}),  400) #Bad Request
         new_category = Categories()
         new_category.delete_product_category(category_id)
         return make_response(jsonify({'Message': "{} Deleted Successfuly".format(
-            product_category[0]['category_name'])}), 200)
+            product_category[0]['category_name'])}), 200) #ok

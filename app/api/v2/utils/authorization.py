@@ -16,7 +16,7 @@ def admin_required(func):
             user_role = cur_user[0]['role']
             if user_role != 'admin':
                 return {
-                    'message': 'This activity can be completed by Admin only'}, 403
+                    'message': 'This activity can be completed by Admin only'}, 403 # Forbidden
             return func(*args, **kwargs)
         except Exception as e:
             return {"message": e}
@@ -33,6 +33,6 @@ def store_attendant_required(func):
         user_role = cur_user[0]['role']
         if user_role != 'attedant': 
             return {
-                'message': 'This activity can be completed by Store Attedant only'}, 403
+                'message': 'This activity can be completed by Store Attedant only'}, 403 # Forbidden
         return func(*args, **kwargs)
     return wrapper_function

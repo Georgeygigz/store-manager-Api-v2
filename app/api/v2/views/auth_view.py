@@ -33,12 +33,12 @@ class CreateAccount(Resource):
         if not re.match(
             r'^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$',
                 request.json['email']):
-            return make_response(jsonify({"message": "invalid Email"}), 401)
+            return make_response(jsonify({"message": "invalid Email"}), 400)#Bad request
 
         if not re.match(
             '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$])',
                 request.json['password']):
-            return make_response(jsonify({"message": "invalid password"}), 401)
+            return make_response(jsonify({"message": "invalid password"}), 400)#Bad request
 
         new_user_detail = {"user_id": user_id,
                            "username": username,
@@ -50,7 +50,7 @@ class CreateAccount(Resource):
             new_user = Users()
             new_user.insert_new_user(**new_user_detail)
             return make_response(
-                jsonify({"message": "Account created successfuly"}), 201)
+                jsonify({"message": "Account created successfuly"}), 201)#created
 
         return make_response(jsonify(
             {"message": " {} Aready Exist".format(request.json['email'])}), 409)  # conflict
@@ -74,12 +74,12 @@ class Login(Resource):
 
             else:
                 return make_response(
-                    jsonify({"message": "Incorrect Password"}), 401)
+                    jsonify({"message": "Incorrect Password"}), 401)#unauthorized
         else:
             return make_response(
-                jsonify({"message": "Incorrect Email. If have not account, contact Admin"}), 401)
+                jsonify({"message": "Incorrect Email. If have not account, contact Admin"}), 401)#unauthorized
 
-        return result, 200
+        return result, 200 #ok
 
 
 class UpdateUserRole(Resource):
@@ -92,15 +92,15 @@ class UpdateUserRole(Resource):
         role = (data["role"]).lower()
         update_user = [user for user in users if user['user_id'] == user_id]
         if not update_user:
-            return make_response(jsonify({'Error': "User Not found"}), 400)
+            return make_response(jsonify({'Error': "User Not found"}), 400) #Bad request
         user = Users()
         user.update_user(user_id, role)
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200)
+            {'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200) #ok
 
 class Logout(Resource):
     @jwt_required
     def delete(self):
         jti = get_raw_jwt()['jti']
         blacklist.add(jti)
-        return make_response(jsonify({"message": "Successfully logged out"}), 200)
+        return make_response(jsonify({"message": "Successfully logged out"}), 200)#ok
