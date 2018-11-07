@@ -22,7 +22,7 @@ class Products():
                 product_id, product_name, category_id, stock_amount, price, low_inventory_stock = v
                 new_product = {"product_id": product_id,
                                "product_name": product_name,
-                               "category_id": category_id,
+                               "category_id": int(category_id),
                                "stock_amount": stock_amount,
                                "price": price,
                                "low_inventory_stock": low_inventory_stock}
@@ -48,7 +48,7 @@ class Products():
             curr.execute(query, (product_id, product_name, category_id,
                                  stock_amount, price, low_inventory_stock))
             database.commit()
-            return {"Message": "Product added successfully"}, 201
+            return {"Message": "Product added successfully"}
         except Exception as e:
             return {"Message": e}
 
@@ -75,7 +75,7 @@ class Products():
                  low_inventory_stock,
                  product_id))
             database.commit()
-            return {"Message": "Product Updated successfully"}, 201
+            return {"Message": "Product Updated successfully"}
         except Exception as e:
             return {"Message": e}
 
@@ -88,7 +88,7 @@ class Products():
             curr.execute(query, (stock_amount, product_name))
             database.commit()
             curr.close()
-            return {"Message": "Product Updated successfully"}, 201
+            return {"Message": "Product Updated successfully"}
         except Exception as e:
             return {"Message": e}
 
@@ -100,7 +100,7 @@ class Products():
             query = "DELETE FROM products WHERE product_id=%s;"
             curr.execute(query, (product_id,))
             database.commit()
-            return {"Message": "Product Updated successfully"}, 201
+            return {"Message": "Product Updated successfully"}
 
         except Exception as e:
             return {"Message": e}
@@ -164,7 +164,7 @@ class Sales:
              total_price,
              date_sold))
         database.commit()
-        return {"Message": "Sale record Save succefully"}, 201
+        return {"Message": "Sale record Save succefully"}
 
 
 class Categories:
@@ -201,7 +201,7 @@ class Categories:
         query = "INSERT INTO products_category (category_id,category_name) VALUES (%s,%s);"
         curr.execute(query, (category_id, category_name))
         database.commit()
-        return {"Message": "Sale record Save succefully"}, 201
+        return {"Message": "Sale record Save succefully"}
 
     def update_product_category(self, category_id, category_name):
         """Update product category."""
@@ -211,7 +211,7 @@ class Categories:
             query = "UPDATE products_category SET category_name=%s WHERE category_id=%s;"
             curr.execute(query, (category_name, category_id))
             database.commit()
-            return {"Message": "Category Updated successfully"}, 201
+            return {"Message": "Category Updated successfully"}
         except Exception as e:
             return {"Message": e}
 
@@ -223,7 +223,7 @@ class Categories:
             query = "DELETE FROM products_category WHERE category_id=%s;"
             curr.execute(query, (category_id,))
             database.commit()
-            return {"Message": "Product Updated successfully"}, 201
+            return {"Message": "Product Updated successfully"}
 
         except Exception as e:
             return {"Message": e}
@@ -243,7 +243,7 @@ class Users:
         curr.execute(query, (user_id, username, email, password, role))
         database.commit()
         curr.close()
-        return {"Message": "User created succefully"}, 201
+        return {"Message": "User created succefully"}
 
     def get_all_users(self):
         """Get all users."""
@@ -272,6 +272,6 @@ class Users:
             query = "UPDATE users SET user_type=%s WHERE user_id=%s;"
             curr.execute(query, (role, user_id))
             database.commit()
-            return {"Message": "Category Updated successfully"}, 201
+            return {"Message": "Category Updated successfully"}
         except Exception as e:
             return {"Message": e}

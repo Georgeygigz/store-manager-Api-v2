@@ -1,6 +1,6 @@
 #store_database.py
 
-'''Create new connection'''
+"""Create new connection"""
 import psycopg2
 import os
 from instance.config import app_configuration
