@@ -70,7 +70,7 @@ class Login(Resource):
             password = cur_user[0]['password']
             if sha256_crypt.verify(get_password, password):
                 token = create_access_token(identity=cur_user[0]['email'])
-                result = {"message": "Login succesful", "token": token}
+                result = {"message": "Login succesful","User":cur_user[0]['username'], "token": token}
 
             else:
                 return make_response(
