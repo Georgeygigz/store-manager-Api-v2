@@ -9,6 +9,7 @@ from datetime import timedelta
 from app.api.v2.models.store_model import Users
 import os
 from instance.config import app_configuration, Config
+from flask_cors import CORS
 
 # local imports
 from manage import Database
@@ -32,6 +33,7 @@ def create_app(config_name):
     app.config['JWT_SECRET_KEY'] = "dbskbjdmsdscdscdsdk"
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     jwt.init_app(app)
+    CORS(app)
     app_api.add_resource(ViewProducts, '/products')
     app_api.add_resource(ViewSingleProduct, '/products/<int:product_id>')
     app_api.add_resource(ViewSalesRecord, '/sales')
