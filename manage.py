@@ -17,21 +17,25 @@ class Database:
             for query in create_tables:
                 self.curr.execute(query)
             self.conn.commit()
+            
             attedant = Users()
-            attedant.insert_new_user(
-                1,
-                'george',
-                "georgey@gmail.com",
-                "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
-                "attedant")
-            admin = Users()
-            admin.insert_new_user(
-                2,
-                'mary',
-                "mary@gmail.com",
-                "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
-                "admin")
-            self.curr.close
+            all_users=attedant.get_all_users()
+            user=[c_user for c_user in all_users if c_user['email']=='georgey@gmail.com']
+            if not user:
+                attedant.insert_new_user(
+                    1,
+                    'george',
+                    "georgey@gmail.com",
+                    "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
+                    "attedant")
+                admin = Users()
+                admin.insert_new_user(
+                    2,
+                    'mary',
+                    "mary@gmail.com",
+                    "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
+                    "admin")
+                self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
             return e
 
