@@ -14,7 +14,19 @@ from app.api.v2.models.store_model import Users
 from app.api.v2.utils.authorization import admin_required
 blacklist = set()
 
+users = Users().get_all_users()
 class CreateAccount(Resource):
+    """Get all users."""
+    @jwt_required
+    @admin_required
+    def get(self):
+        users = Users().get_all_users()
+        if not users:
+            return make_response(
+                jsonify({"message": "No available users"}), 200)#ok
+        return make_response(jsonify({"message":users}), 200)#ok
+
+        
     """Create a new account."""
     @jwt_required
     @admin_required
