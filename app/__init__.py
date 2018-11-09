@@ -14,7 +14,6 @@ from flask_cors import CORS
 # local imports
 from manage import Database
 db=Database()
-db.destory()
 db.create_table()
            
 from instance.config import app_configuration
