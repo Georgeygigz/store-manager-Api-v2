@@ -14,7 +14,7 @@ class TestStoreViews(BaseTest):
         """Test get all products."""
         response=self.get_all_products()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 200,result['Available Products'] )
+        self.assertEqual(response.status_code, 200,result['message'] )
 
     def test_get_unexisting_products(self):
         """Test geet unexisting products."""
@@ -27,13 +27,13 @@ class TestStoreViews(BaseTest):
         """Test add new product."""
         response=self.add_new_product()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(response.status_code, 201, result['New Product'])
+        self.assertEqual(response.status_code, 201, result['message'])
     
     def test_invalid_data_types(self):
         """Test invalid data types."""
         response=self.check_invalid_data_type()
         result = json.loads(response.data.decode('utf-8'))
-        self.assertEqual(result['Error'],"Require int or float type")
+        self.assertEqual(result['message'],"Require int or float type")
         self.assertEqual(response.status_code, 200)
 
     def test_fetch_single_product(self):

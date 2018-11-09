@@ -10,7 +10,7 @@ from flask_jwt_extended import (jwt_required, get_jwt_identity)
 from app.api.v2.models.store_model import (Products, Sales, Categories,Users)
 from app.api.v2.utils.authorization import (
     admin_required, store_attendant_required)
-
+    
 products = Products().get_all_products()
 
 
@@ -22,7 +22,7 @@ class ViewProducts(Resource):
         if not products:
             return make_response(
                 jsonify({"message": "No Available products"}), 200) #Ok
-        return make_response(jsonify({"Available Products": products}), 200) #Ok
+        return make_response(jsonify({"message": products}), 200) #Ok
 
     @jwt_required
     @admin_required
@@ -35,18 +35,18 @@ class ViewProducts(Resource):
         category = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
-        inventory_stock = data['low_inventory_stock']
+        
 
 
         product = [product for product in products if product['product_name']
                    == request.json['product_name']]
 
         if (not request.json or "product_name" not in request.json):
-            return make_response(jsonify({'Error': "Request Not found"}), 404)# Not Found
+            return make_response(jsonify({'message': "Request Not found"}), 404)# Not Found
 
         if type(request.json['stock_amount'])not in [int, float]:
             return make_response(
-                jsonify({"Error": "Require int or float type"}))
+                jsonify({"message": "Require int or float type"}))
 
         if request.json['product_name'] in [
                 n_product['product_name'] for n_product in products]:
@@ -54,7 +54,7 @@ class ViewProducts(Resource):
             update_product = Products()
             update_product.update_stock_amount(
                 product[0]['product_name'], product[0]['stock_amount'])
-            return make_response(jsonify({"Products": product}), 200)  # ok
+            return make_response(jsonify({"message": "Product updated successfully"}), 200)  # ok
 
         new_product = {
             "product_id": product_id,
@@ -62,12 +62,12 @@ class ViewProducts(Resource):
             "category_id": category,
             "stock_amount": stock_amount,
             "price": price,
-            "low_inventory_stock": inventory_stock
+           
         }
 
         new_pro = Products()
         new_pro.insert_new_product(**new_product)
-        return make_response(jsonify({"New Product": new_product}), 201) #Created
+        return make_response(jsonify({"message": "Product saved successfully"}), 201) #Created
 
 
 class ViewSingleProduct(Resource):
@@ -91,7 +91,9 @@ class ViewSingleProduct(Resource):
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
-        low_inventory_stock = data['low_inventory_stock']
+    
+        
+
         product = [
             product for product in products if product['product_id'] == product_id]
         if not product:
@@ -102,8 +104,7 @@ class ViewSingleProduct(Resource):
             product_name,
             category_id,
             stock_amount,
-            price,
-            low_inventory_stock)
+            price)
         return make_response(jsonify(
             {'Message': "{} Updated Successfuly".format(product[0]['product_name'])}), 200)#Ok
 

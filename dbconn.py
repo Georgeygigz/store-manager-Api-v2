@@ -5,8 +5,7 @@ products = """CREATE TABLE IF NOT EXISTS products(
  	                   product_name VARCHAR PRIMARY KEY NOT NULL ,
  	                   category_id VARCHAR NOT NULL,
  	                   stock_amount INT NOT NULL,
- 	                   price FLOAT,
- 	                   low_inventory_stock INT);"""
+ 	                   price FLOAT);"""
 
 sales = """CREATE TABLE IF NOT EXISTS sales(
  	                    sale_id INT PRIMARY KEY,

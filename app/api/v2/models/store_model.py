@@ -19,13 +19,12 @@ class Products():
             data = curr.fetchall()
             all_products = []
             for k, v in enumerate(data):
-                product_id, product_name, category_id, stock_amount, price, low_inventory_stock = v
+                product_id, product_name, category_id, stock_amount, price = v
                 new_product = {"product_id": product_id,
                                "product_name": product_name,
                                "category_id": int(category_id),
                                "stock_amount": stock_amount,
-                               "price": price,
-                               "low_inventory_stock": low_inventory_stock}
+                               "price": price}
                 all_products.append(new_product)
             return all_products
 
@@ -38,15 +37,14 @@ class Products():
             product_name,
             category_id,
             stock_amount,
-            price,
-            low_inventory_stock):
+            price):
         """Insert New Product."""
         database = self.db
         try:
             curr = database.cursor()
-            query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price,low_inventory_stock) VALUES (%s,%s,%s,%s,%s,%s);"
+            query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price) VALUES (%s,%s,%s,%s,%s);"
             curr.execute(query, (product_id, product_name, category_id,
-                                 stock_amount, price, low_inventory_stock))
+                                 stock_amount, price))
             database.commit()
             return {"Message": "Product added successfully"}
         except Exception as e:
@@ -58,21 +56,19 @@ class Products():
         product_name,
         category_id,
         stock_amount,
-        price,
-        low_inventory_stock,
+        price
     ):
         """Update Product."""
         database = self.db
         try:
             curr = database.cursor()
-            query = "UPDATE products SET product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s WHERE product_id=%s;"
+            query = "UPDATE products SET product_name=%s,category_id=%s,stock_amount=%s,price=%s WHERE product_id=%s;"
             curr.execute(
                 query,
                 (product_name,
                  category_id,
                  stock_amount,
                  price,
-                 low_inventory_stock,
                  product_id))
             database.commit()
             return {"Message": "Product Updated successfully"}

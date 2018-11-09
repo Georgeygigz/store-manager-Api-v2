@@ -17,16 +17,14 @@ class BaseTest(unittest.TestCase):
             "product_name": "orange",
             "category_id": 1,
             "stock_amount": 2000,
-            "price": 20,
-            "low_inventory_stock": 2
+            "price": 20
         }
         self.invalid_data_types_products = {
             "product_id": 1,
             "product_name": "Bread",
             "category_id": 1,
             "stock_amount": "2000",
-            "price": 20,
-            "low_inventory_stock": 2
+            "price": 20
         }
 
         self.sales = {
@@ -94,8 +92,7 @@ class BaseTest(unittest.TestCase):
             "product_name": "",
             "category_id": 1,
             "stock_amount": 2000,
-            "price": 20,
-            "low_inventory_stock": 2
+            "price": 20
         }
        
         self.invalid_login = {
