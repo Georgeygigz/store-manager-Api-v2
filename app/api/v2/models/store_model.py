@@ -19,12 +19,13 @@ class Products():
             data = curr.fetchall()
             all_products = []
             for k, v in enumerate(data):
-                product_id, product_name, category_id, stock_amount, price = v
+                product_id, product_name, category_id, stock_amount, price,image = v
                 new_product = {"product_id": product_id,
                                "product_name": product_name,
                                "category_id": int(category_id),
                                "stock_amount": stock_amount,
-                               "price": price}
+                               "price": price,
+                               "image":image}
                 all_products.append(new_product)
             return all_products
 
@@ -37,14 +38,15 @@ class Products():
             product_name,
             category_id,
             stock_amount,
-            price):
+            price,
+            image):
         """Insert New Product."""
         database = self.db
         try:
             curr = database.cursor()
-            query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price) VALUES (%s,%s,%s,%s,%s);"
+            query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price,image) VALUES (%s,%s,%s,%s,%s,%s);"
             curr.execute(query, (product_id, product_name, category_id,
-                                 stock_amount, price))
+                                 stock_amount, price,image))
             database.commit()
             return {"Message": "Product added successfully"}
         except Exception as e:

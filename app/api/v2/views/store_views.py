@@ -35,8 +35,7 @@ class ViewProducts(Resource):
         category = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
-        
-
+        image=data['image']
 
         product = [product for product in products if product['product_name']
                    == request.json['product_name']]
@@ -62,6 +61,7 @@ class ViewProducts(Resource):
             "category_id": category,
             "stock_amount": stock_amount,
             "price": price,
+            "image":image
            
         }
 
