@@ -14,7 +14,7 @@ class Products():
         conn = self.db
         try:
             curr = conn.cursor()
-            query = """SELECT * FROM products;"""
+            query = """SELECT * FROM products order by product_id;"""
             curr.execute(query)
             data = curr.fetchall()
             all_products = []
@@ -161,6 +161,19 @@ class Sales:
              date_sold))
         database.commit()
         return {"Message": "Sale record Save succefully"}
+    
+    def delete_sale_record(self, sale_id):
+        """Delete Category."""
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "DELETE FROM sales WHERE sale_id=%s;"
+            curr.execute(query, (sale_id,))
+            database.commit()
+            return {"Message": "Product Updated successfully"}
+
+        except Exception as e:
+            return {"Message": e}
 
 
 class Categories:
@@ -269,5 +282,19 @@ class Users:
             curr.execute(query, (role, user_id))
             database.commit()
             return {"Message": "Category Updated successfully"}
+        except Exception as e:
+            return {"Message": e}
+    
+    
+    def delete_users(self, user_id):
+        """Delete users."""
+        database = self.db
+        try:
+            curr = database.cursor()
+            query = "DELETE FROM users WHERE user_id=%s;"
+            curr.execute(query, (user_id,))
+            database.commit()
+            return {"Message": "User Updated successfully"}
+
         except Exception as e:
             return {"Message": e}

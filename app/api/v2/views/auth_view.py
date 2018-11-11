@@ -94,7 +94,7 @@ class Login(Resource):
         return result, 200 #ok
 
 
-class UpdateUserRole(Resource):
+class SingleUser(Resource):
     @jwt_required
     @admin_required
     def put(self, user_id):
@@ -104,11 +104,25 @@ class UpdateUserRole(Resource):
         role = (data["role"]).lower()
         update_user = [user for user in users if user['user_id'] == user_id]
         if not update_user:
-            return make_response(jsonify({'Error': "User Not found"}), 400) #Bad request
+            return make_response(jsonify({'message': "User Not found"}), 400) #Bad request
         user = Users()
         user.update_user(user_id, role)
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200) #ok
+            {'message': "Updated Successfuly"}), 200) #ok
+    
+    
+    @jwt_required
+    @admin_required
+    def delete(self, user_id):
+        """Delete product user."""
+        users = Users().get_all_users()
+        single_user = [
+            user for user in users if user['user_id'] == user_id]
+        if not single_user:
+            return make_response(jsonify({'message': "User Not found"}),  400) #Bad Request
+        cur_user = Users()
+        cur_user.delete_users(user_id)
+        return make_response(jsonify({'message': "User Deleted Successfuly"}), 200) #ok
 
 class Logout(Resource):
     @jwt_required
