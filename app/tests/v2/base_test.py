@@ -17,14 +17,16 @@ class BaseTest(unittest.TestCase):
             "product_name": "orange",
             "category_id": 1,
             "stock_amount": 2000,
-            "price": 20
+            "price": 20,
+            "image":"orange.png"
         }
         self.invalid_data_types_products = {
             "product_id": 1,
             "product_name": "Bread",
             "category_id": 1,
             "stock_amount": "2000",
-            "price": 20
+            "price": 20,
+            "image":"orange.png"
         }
 
         self.sales = {
