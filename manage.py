@@ -1,6 +1,6 @@
 import psycopg2
 import os
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 from dbconn import create_tables
 from instance.config import app_configuration
 
@@ -44,9 +44,10 @@ class Database:
     def destory(self):
         products = "DROP TABLE IF EXISTS  products CASCADE"
         sales = "DROP TABLE IF EXISTS  sales CASCADE"
+        cart = "DROP TABLE IF EXISTS  cart CASCADE"
         users = "DROP TABLE IF EXISTS  users CASCADE"
         product_category = "DROP TABLE IF EXISTS  products_category CASCADE"
-        drop_queries = [products, sales, users, product_category]
+        drop_queries = [products, sales, cart, users, product_category]
         try:
             for query in drop_queries:
                 self.curr.execute(query)

@@ -6,7 +6,7 @@ from flask import Flask, Blueprint,make_response,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 import os
 from instance.config import app_configuration, Config
 from flask_cors import CORS
@@ -18,9 +18,11 @@ db.destory()
 db.create_table()
            
 from instance.config import app_configuration
-from app.api.v2.views.store_views import (
-    ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleAttedantSales,
-    SingleSale, ProductCategories, SingleProductCategory)
+from app.api.v2.views.product_views import (ViewSingleProduct,ViewProducts)
+from app.api.v2.views.sales_view import (ViewSalesRecord,SingleAttedantSales,SingleSale)
+from app.api.v2.views.auth_view import (Users)
+from app.api.v2.views.category_view import ( ProductCategories, SingleProductCategory)
+
 from app.api.v2.views.auth_view import CreateAccount, Login,SingleUser, Logout
 from app.api.v2.views.auth_view import blacklist
 
