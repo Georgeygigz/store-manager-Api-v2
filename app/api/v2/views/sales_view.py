@@ -51,6 +51,8 @@ class SingleAttedantSales(Resource):
             return {"message": single_sale}, 200  # ok
         return {"message": "Sale Not Found"},   400 #Bad Request        
 
+
+
 class ViewSalesRecord(Resource):
 
     @jwt_required
@@ -131,8 +133,3 @@ class ViewSalesRecord(Resource):
         new_sales_record = Sales()
         new_sales_record.insert_new_sale(**new_sale)
         return {"message": "Item added successfuly"}, 201  # created
-    
-
-
-
-

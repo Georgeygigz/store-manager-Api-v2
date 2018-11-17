@@ -6,24 +6,21 @@ class Users:
 
     def __init__(self):
         self.db = conn_db()
+        self.curr = self.db.cursor()
 
     def insert_new_user(self, user_id, username, email, password, role):
         """Insert new user."""
-        database = self.db
-        curr = database.cursor()
         query = "INSERT INTO users (user_id, username,email, password,user_type) VALUES (%s,%s,%s,%s,%s);"
-        curr.execute(query, (user_id, username, email, password, role))
-        database.commit()
-        curr.close()
+        self.curr.execute(query, (user_id, username, email, password, role))
+        self.db.commit()
+        self.curr.close()
         return {"Message": "User created succefully"}
 
     def get_all_users(self):
         """Get all users."""
-        conn = self.db
-        curr = conn.cursor()
         query = """SELECT * FROM users;"""
-        curr.execute(query)
-        data = curr.fetchall()
+        self.curr.execute(query)
+        data = self.curr.fetchall()
         all_users = []
 
         for k, v in enumerate(data):
@@ -38,26 +35,15 @@ class Users:
 
     def update_user(self, user_id, role):
         """Update product category."""
-        database = self.db
-        try:
-            curr = database.cursor()
-            query = "UPDATE users SET user_type=%s WHERE user_id=%s;"
-            curr.execute(query, (role, user_id))
-            database.commit()
-            return {"Message": "Category Updated successfully"}
-        except Exception as e:
-            return {"Message": e}
-    
-    
+        query = "UPDATE users SET user_type=%s WHERE user_id=%s;"
+        self.curr.execute(query, (role, user_id))
+        self.db.commit()
+        return {"Message": "Category Updated successfully"}
+ 
     def delete_users(self, user_id):
         """Delete users."""
-        database = self.db
-        try:
-            curr = database.cursor()
-            query = "DELETE FROM users WHERE user_id=%s;"
-            curr.execute(query, (user_id,))
-            database.commit()
-            return {"Message": "User Updated successfully"}
+        query = "DELETE FROM users WHERE user_id=%s;"
+        self.curr.execute(query, (user_id,))
+        self.db.commit()
+        return {"Message": "User Updated successfully"}
 
-        except Exception as e:
-            return {"Message": e}
