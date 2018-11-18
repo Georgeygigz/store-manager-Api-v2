@@ -60,12 +60,11 @@ class SingleProductCategory(Resource):
     @admin_required
     def put(self, category_id):
         """Update product category."""
-        categories = Categories().get_all_categories()
         data = request.get_json(force=True)
         category_name = (data["category_name"]).lower()
 
         product_category = [
-            category for category in categories if category['category_id'] == category_id]
+            category for category in view_all_categories() if category['category_id'] == category_id]
         if not product_category:
             return make_response(jsonify({'message': "Category Not found"}), 400) #Bad Request
         new_category = Categories()
@@ -77,7 +76,6 @@ class SingleProductCategory(Resource):
     def delete(self, category_id):
         """Delete product category."""
         products = Products().get_all_products()
-        view_all_categories()
         product_category = [
             category for category in view_all_categories() if category['category_id'] == category_id]
         if not product_category:

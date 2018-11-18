@@ -14,16 +14,18 @@ from app.api.v2.models.category_model import (Categories)
 from app.api.v2.utils.authorization import (
     admin_required, store_attendant_required)
 
-products = Products().get_all_products()
+def get_all_sales():
+    sales_record = Sales().get_all_sales()
+    return sales_record
 
+products = Products().get_all_products()
 
 class SingleSale(Resource):
     @jwt_required
     def get(self, sale_id):
         """ Get single sale record."""
-        sales_record = Sales().get_all_sales()
         single_sale = [
-            sale for sale in sales_record if sale['sale_id'] == sale_id]
+            sale for sale in get_all_sales() if sale['sale_id'] == sale_id]
         if single_sale:
             return {"message": single_sale}, 200  # ok
         return {"message": "Sale Not Found"},   400 #Bad Request
@@ -31,9 +33,8 @@ class SingleSale(Resource):
     @jwt_required
     def delete(self,sale_id):
         """Delete from cart."""
-        sales_record = Sales().get_all_sales()
         single_sale = [
-            sale for sale in sales_record if sale['sale_id'] == sale_id]
+            sale for sale in get_all_sales() if sale['sale_id'] == sale_id]
         if not single_sale:
             return make_response(jsonify({'message': "Sale Not found"}),  400) #Bad Request
         sale_record = Sales()
@@ -44,9 +45,8 @@ class SingleAttedantSales(Resource):
     @jwt_required
     def get(self,attedant_name):
         """ Get single sale record for specific user."""
-        sales_record = Sales().get_all_sales()
         single_sale = [
-            sale for sale in sales_record if sale['attedant_name'] == attedant_name]
+            sale for sale in get_all_sales() if sale['attedant_name'] == attedant_name]
         if single_sale:
             return {"message": single_sale}, 200  # ok
         return {"message": "Sale Not Found"},   400 #Bad Request        
@@ -54,15 +54,13 @@ class SingleAttedantSales(Resource):
 
 
 class ViewSalesRecord(Resource):
-
     @jwt_required
     def get(self):
-        sales_record = Sales().get_all_sales()
         """Get all sales' records."""
-        if not sales_record:
+        if not get_all_sales():
             return make_response(
                 jsonify({"message": "No Available sales records"}), 200)#Ok
-        return {"message": sales_record}, 200  # ok
+        return {"message": get_all_sales()}, 200  # ok
 
     @jwt_required
     @store_attendant_required
@@ -71,7 +69,6 @@ class ViewSalesRecord(Resource):
         users= Users().get_all_users()
         cur_user=[user for user in users if user['email']==get_jwt_identity()]
         user_name=cur_user[0]['username']
-        sales_record = Sales().get_all_sales()
         products = Products().get_all_products()
         current_date = str(date.today())
         data = request.get_json(force=True)
@@ -93,7 +90,7 @@ class ViewSalesRecord(Resource):
         if request.json['quantity'] > current_product[0]['stock_amount']:
             return {"message": "Quantity exeed amount in stock"}, 200 #ok
 
-        sale_id = len(sales_record) + 1
+        sale_id = len(get_all_sales()) + 1
         attedant_name = user_name
         customer_name = (data["customer_name"]).lower()
         product_name = (data["product_name"]).lower()
@@ -110,7 +107,7 @@ class ViewSalesRecord(Resource):
             return {'message': "Request Not found"},  400 #Bad Request
 
         if request.json['product_name'] in [sale['product_name']
-                                            for sale in sales_record]:
+                                            for sale in get_all_sales()]:
             return {
                 "message": "{} Exist in cart".format(
                     request.json['product_name'])}, 200 #ok
@@ -133,4 +130,3 @@ class ViewSalesRecord(Resource):
         new_sales_record = Sales()
         new_sales_record.insert_new_sale(**new_sale)
         return {"message": "Item added successfuly"}, 201  # created
-        
