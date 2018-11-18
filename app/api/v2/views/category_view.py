@@ -16,17 +16,21 @@ from app.api.v2.utils.authorization import (
 
 products = Products().get_all_products()
 
+def view_all_categories():
+    categories = Categories().get_all_categories()
+    return categories
+
 
 class ProductCategories(Resource):
     @jwt_required
     @admin_required
     def get(self):
-        categories = Categories().get_all_categories()
+        view_all_categories()
         """Get all products' Categories."""
-        if not categories:
+        if not view_all_categories():
             return make_response(
                 jsonify({"message": "No Available products categories"}), 200)#ok
-        return {"message": categories}, 200  # ok
+        return {"message": view_all_categories()}, 200  # ok
 
     @jwt_required
     @admin_required
@@ -73,9 +77,9 @@ class SingleProductCategory(Resource):
     def delete(self, category_id):
         """Delete product category."""
         products = Products().get_all_products()
-        categories = Categories().get_all_categories()
+        view_all_categories()
         product_category = [
-            category for category in categories if category['category_id'] == category_id]
+            category for category in view_all_categories() if category['category_id'] == category_id]
         if not product_category:
             return make_response(jsonify({'message': "Category Not found"}),  400) #Bad Request
         single_product=[product for product in products if product['category_id']==category_id]
