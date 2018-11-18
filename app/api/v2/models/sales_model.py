@@ -53,9 +53,7 @@ class Sales:
              date_sold))
         self.db.commit()
         return {"Message": "Sale record Save succefully"}
-    
-    
-    
+
     def delete_sale_record(self, sale_id):
         """Delete sales."""
         query = "DELETE FROM sales WHERE sale_id=%s;"

@@ -17,6 +17,7 @@ blacklist = set()
 def get_all_users():
     users=Users().get_all_users()
     return users
+    
 class CreateAccount(Resource):
     """Get all users."""
     @jwt_required
@@ -113,9 +114,9 @@ class SingleUser(Resource):
     @admin_required
     def delete(self, user_id):
         """Delete product user."""
-        single_user = [
-            user for user in get_all_users() if user['user_id'] == user_id]
-        if not single_user:
+        c_user = [
+            current_user for current_user in get_all_users() if current_user['user_id'] == user_id]
+        if not c_user:
             return make_response(jsonify({'message': "User Not found"}),  400) #Bad Request
         cur_user = Users()
         cur_user.delete_users(user_id)

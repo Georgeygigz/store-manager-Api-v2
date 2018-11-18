@@ -17,7 +17,10 @@ from app.api.v2.utils.authorization import (
 def get_all_products():
     products = Products().get_all_products()
     return products
-
+def get_single_product(product_id):
+        product = [
+        product for product in get_all_products() if product['product_id'] == product_id]
+        return product
 
 class ViewProducts(Resource):
     @jwt_required
@@ -100,9 +103,7 @@ class ViewSingleProduct(Resource):
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
-
-        product = [
-            product for product in get_all_products() if product['product_id'] == product_id]
+        product=get_single_product(product_id)
         if not product:
             return make_response(jsonify({'message': "Product Not found"}),  400) #Bad Request
         new_pro = Products()
@@ -119,8 +120,7 @@ class ViewSingleProduct(Resource):
     @admin_required
     def delete(self, product_id):
         """Delete product."""
-        product = [
-            product for product in get_all_products() if product['product_id'] == product_id]
+        product=get_single_product(product_id)
         if not product:
             return make_response(jsonify({'message': "Product Not found"}),  400) #Bad Request
         new_pro = Products()

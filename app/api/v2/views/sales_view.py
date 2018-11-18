@@ -45,10 +45,10 @@ class SingleAttedantSales(Resource):
     @jwt_required
     def get(self,attedant_name):
         """ Get single sale record for specific user."""
-        single_sale = [
-            sale for sale in get_all_sales() if sale['attedant_name'] == attedant_name]
-        if single_sale:
-            return {"message": single_sale}, 200  # ok
+        sale_record = [
+            single_sale for single_sale in get_all_sales() if single_sale['attedant_name'] == attedant_name]
+        if sale_record:
+            return {"message": sale_record}, 200  # ok
         return {"message": "Sale Not Found"},   400 #Bad Request        
 
 
@@ -75,12 +75,12 @@ class ViewSalesRecord(Resource):
         required_inputs = ['customer_name', 'product_name','quantity']
         for field in required_inputs:
             if field not in request.json:
-                return make_response(jsonify({'message': " {} missing".format(field)}))
+                return make_response(jsonify({'message': " {} is required".format(field)}))
 
-        empty_inputs = [request.json['customer_name'],request.json['product_name'],request.json['quantity']]
-        for empty_field in empty_inputs:
-            if (empty_field ==""):
-                return make_response(jsonify({'message': "{} Empty field detected".format(empty_field)}))
+        empty_data = [request.json['customer_name'],request.json['product_name'],request.json['quantity']]
+        for empty_input in empty_data:
+            if (empty_input ==""):
+                return make_response(jsonify({'message': "{} All fields are required".format(empty_input)}))
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
         if not current_product or current_product[0]['stock_amount'] == 0:
@@ -98,10 +98,10 @@ class ViewSalesRecord(Resource):
         quantity = data["quantity"]
         total_price = price * quantity
         date_sold = current_date
-        empty_inputs = [product_name,quantity,customer_name]
-        for empty_field in empty_inputs:
-            if (empty_field ==""):
-                return make_response(jsonify({'message': "{} Empty field detected".format(empty_field)}))
+        required_field = [product_name,quantity,customer_name]
+        for all_fields in required_field:
+            if (all_fields ==""):
+                return make_response(jsonify({'message': "{} Empty field detected".format(all_fields)}))
 
         if (not request.json or "product_name" not in request.json):
             return {'message': "Request Not found"},  400 #Bad Request
