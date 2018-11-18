@@ -102,8 +102,6 @@ class ViewSingleProduct(Resource):
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
-    
-        
 
         product = [
             product for product in products if product['product_id'] == product_id]
@@ -131,5 +129,3 @@ class ViewSingleProduct(Resource):
         new_pro = Products()
         new_pro.delete_product(product_id)
         return make_response(jsonify({'message': "Deleted Successfuly"}), 200)#ok
-
-

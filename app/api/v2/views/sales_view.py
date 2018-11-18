@@ -133,3 +133,4 @@ class ViewSalesRecord(Resource):
         new_sales_record = Sales()
         new_sales_record.insert_new_sale(**new_sale)
         return {"message": "Item added successfuly"}, 201  # created
+        
