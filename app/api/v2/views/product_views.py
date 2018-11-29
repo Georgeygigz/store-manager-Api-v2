@@ -22,6 +22,10 @@ def get_single_product(product_id):
         product for product in get_all_products() if product['product_id'] == product_id]
         return product
 
+def get_user_data():
+    data = request.get_json(force=True)
+    return data
+
 class ViewProducts(Resource):
     @jwt_required
     def get(self):
@@ -35,7 +39,7 @@ class ViewProducts(Resource):
     @admin_required
     def post(self):
         """Add a new product."""
-        data = request.get_json(force=True)
+        data = get_user_data()
         required_inputs = ['product_name', 'category_id','stock_amount', 'price', 'image']
         for field in required_inputs:
             if field not in request.json:
@@ -98,7 +102,7 @@ class ViewSingleProduct(Resource):
     @admin_required
     def put(self, product_id):
         """Update product."""
-        data = request.get_json(force=True)
+        data = get_user_data()
         product_name = (data["product_name"]).lower()
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]

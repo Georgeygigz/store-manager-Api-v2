@@ -18,6 +18,7 @@ def get_all_sales():
     sales_record = Sales().get_all_sales()
     return sales_record
 
+
 products = Products().get_all_products()
 
 class SingleSale(Resource):

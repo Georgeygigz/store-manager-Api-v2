@@ -20,6 +20,10 @@ def view_all_categories():
     categories = Categories().get_all_categories()
     return categories
 
+def get_user_data():
+    data = request.get_json(force=True)
+    return data
+
 
 class ProductCategories(Resource):
     @jwt_required
@@ -37,7 +41,7 @@ class ProductCategories(Resource):
     def post(self):
         """Add a new product category."""
         all_categories = Categories().get_all_categories()
-        data = request.get_json(force=True)
+        data = get_user_data()
         category_id = len(all_categories) + 1
         category_name = data["category_name"]
 
@@ -60,7 +64,7 @@ class SingleProductCategory(Resource):
     @admin_required
     def put(self, category_id):
         """Update product category."""
-        data = request.get_json(force=True)
+        data = get_user_data()
         category_name = (data["category_name"]).lower()
 
         product_category = [

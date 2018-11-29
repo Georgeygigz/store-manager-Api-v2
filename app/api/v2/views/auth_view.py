@@ -17,6 +17,10 @@ blacklist = set()
 def get_all_users():
     users=Users().get_all_users()
     return users
+
+def get_user_data():
+    data = request.get_json(force=True)
+    return data
     
 class CreateAccount(Resource):
     """Get all users."""
@@ -34,7 +38,7 @@ class CreateAccount(Resource):
     @admin_required
     def post(self):
         """Create an account for new user."""
-        data = request.get_json(force=True)
+        data = get_user_data()
         user_id = len(get_all_users()) + 1
         username = data["username"]
         email = data["email"]
@@ -73,7 +77,7 @@ class Login(Resource):
     """Login Endpoint."""
 
     def post(self):
-        data = request.get_json(force=True)
+        data = get_user_data()
         email = data['email']
         get_password = data['password']
         cur_user = [c_user for c_user in get_all_users() if c_user['email'] == email]
@@ -99,7 +103,7 @@ class SingleUser(Resource):
     @admin_required
     def put(self, user_id):
         """Update user role."""
-        data = request.get_json(force=True)
+        data = get_user_data()
         role = (data["role"]).lower()
         update_user = [user for user in get_all_users() if user['user_id'] == user_id]
         if not update_user:
