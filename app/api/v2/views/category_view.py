@@ -41,9 +41,9 @@ class ProductCategories(Resource):
     def post(self):
         """Add a new product category."""
         all_categories = Categories().get_all_categories()
-        data = get_user_data()
+        
         category_id = len(all_categories) + 1
-        category_name = data["category_name"]
+        category_name = get_user_data()["category_name"]
 
         if request.json['category_name'] in [category['category_name']
                                             for category in all_categories]:
@@ -64,9 +64,7 @@ class SingleProductCategory(Resource):
     @admin_required
     def put(self, category_id):
         """Update product category."""
-        data = get_user_data()
-        category_name = (data["category_name"]).lower()
-
+        category_name = (get_user_data()["category_name"]).lower()
         product_category = [
             category for category in view_all_categories() if category['category_id'] == category_id]
         if not product_category:

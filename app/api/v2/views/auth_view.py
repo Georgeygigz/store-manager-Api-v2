@@ -38,12 +38,11 @@ class CreateAccount(Resource):
     @admin_required
     def post(self):
         """Create an account for new user."""
-        data = get_user_data()
         user_id = len(get_all_users()) + 1
-        username = data["username"]
-        email = data["email"]
-        password = data["password"]
-        role = data["role"]
+        username = get_user_data()["username"]
+        email = get_user_data()["email"]
+        password = get_user_data()["password"]
+        role = get_user_data()["role"]
 
         single_user = [user for user in get_all_users() if user['email']
                        == request.json['email']]
@@ -77,9 +76,8 @@ class Login(Resource):
     """Login Endpoint."""
 
     def post(self):
-        data = get_user_data()
-        email = data['email']
-        get_password = data['password']
+        email = get_user_data()['email']
+        get_password = get_user_data()['password']
         cur_user = [c_user for c_user in get_all_users() if c_user['email'] == email]
 
         if len(cur_user) > 0:
@@ -103,8 +101,7 @@ class SingleUser(Resource):
     @admin_required
     def put(self, user_id):
         """Update user role."""
-        data = get_user_data()
-        role = (data["role"]).lower()
+        role = (get_user_data()["role"]).lower()
         update_user = [user for user in get_all_users() if user['user_id'] == user_id]
         if not update_user:
             return make_response(jsonify({'message': "User Not found"}), 400) #Bad request
@@ -117,7 +114,7 @@ class SingleUser(Resource):
     @jwt_required
     @admin_required
     def delete(self, user_id):
-        """Delete product user."""
+        """Delete user."""
         c_user = [
             current_user for current_user in get_all_users() if current_user['user_id'] == user_id]
         if not c_user:

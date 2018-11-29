@@ -34,9 +34,9 @@ class SingleSale(Resource):
     @jwt_required
     def delete(self,sale_id):
         """Delete from cart."""
-        single_sale = [
-            sale for sale in get_all_sales() if sale['sale_id'] == sale_id]
-        if not single_sale:
+        single_sale_record = [
+            sale_record for sale_record in get_all_sales() if sale_record['sale_id'] == sale_id]
+        if not single_sale_record:
             return make_response(jsonify({'message': "Sale Not found"}),  400) #Bad Request
         sale_record = Sales()
         sale_record.delete_sale_record(sale_id)

@@ -39,17 +39,16 @@ class ViewProducts(Resource):
     @admin_required
     def post(self):
         """Add a new product."""
-        data = get_user_data()
         required_inputs = ['product_name', 'category_id','stock_amount', 'price', 'image']
         for field in required_inputs:
             if field not in request.json:
                 return make_response(jsonify({'message': " {} missing".format(field)}))
         product_id = len(get_all_products()) + 1
-        product_name = data["product_name"]
-        category = data["category_id"]
-        stock_amount = data["stock_amount"]
-        price = data['price']
-        image=data['image']
+        product_name = get_user_data()["product_name"]
+        category = get_user_data()["category_id"]
+        stock_amount = get_user_data()["stock_amount"]
+        price = get_user_data()['price']
+        image=get_user_data()['image']
         empty_inputs = [product_name,category,stock_amount,price,image]
         for empty_field in empty_inputs:
             if (empty_field ==""):
@@ -102,11 +101,10 @@ class ViewSingleProduct(Resource):
     @admin_required
     def put(self, product_id):
         """Update product."""
-        data = get_user_data()
-        product_name = (data["product_name"]).lower()
-        category_id = data["category_id"]
-        stock_amount = data["stock_amount"]
-        price = data['price']
+        product_name = (get_user_data()["product_name"]).lower()
+        category_id = get_user_data()["category_id"]
+        stock_amount = get_user_data()["stock_amount"]
+        price = get_user_data()['price']
         product=get_single_product(product_id)
         if not product:
             return make_response(jsonify({'message': "Product Not found"}),  400) #Bad Request
