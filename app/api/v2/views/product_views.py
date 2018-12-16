@@ -26,6 +26,8 @@ def get_user_data():
     data = request.get_json(force=True)
     return data
 
+
+
 class ViewProducts(Resource):
     @jwt_required
     def get(self):
@@ -41,15 +43,17 @@ class ViewProducts(Resource):
         """Add a new product."""
         data = request.get_json(force=True)
         required_inputs = ['product_name', 'category_id','stock_amount', 'price', 'image']
-        for field in required_inputs:
-            if field not in request.json:
-                return make_response(jsonify({'message': " {} missing".format(field)}))
+        inputs=[field for field in required_inputs if field not in request.json ]
+        if inputs:
+            return make_response(jsonify({'message': " {} is required".format(inputs[0])}))
+
         product_id = len(get_all_products()) + 1
         product_name = data["product_name"]
         category = data["category_id"]
         stock_amount =data["stock_amount"]
         price = data['price']
         image=data['image']
+ 
         empty_inputs = [product_name,category,stock_amount,price,image]
         for empty_field in empty_inputs:
             if (empty_field ==""):
@@ -58,9 +62,6 @@ class ViewProducts(Resource):
         product = [product for product in get_all_products() if product['product_name']
                    == request.json['product_name']]
 
-        if (not request.json or "product_name" not in request.json):
-            return make_response(jsonify({'message': "Request Not found"}), 404)# Not Found
-
         if type(request.json['stock_amount'])not in [int, float]:
             return make_response(
                 jsonify({"message": "Require int or float type"}))
@@ -68,23 +69,15 @@ class ViewProducts(Resource):
         if request.json['product_name'] in [
                 n_product['product_name'] for n_product in get_all_products()]:
             product[0]["stock_amount"] += request.json['stock_amount']
-            update_product = Products()
-            update_product.update_stock_amount(
+            update_product = Products().update_stock_amount(
                 product[0]['product_name'], product[0]['stock_amount'])
             return make_response(jsonify({"message": "Product updated successfully"}), 200)  # ok
 
-        new_product = {
-            "product_id": product_id,
-            "product_name": product_name,
-            "category_id": category,
-            "stock_amount": stock_amount,
-            "price": price,
-            "image":image
-           
-        }
+        new_product = {"product_id": product_id,"product_name": product_name,
+                       "category_id": category, "stock_amount": stock_amount,
+                       "price": price,"image":image}
 
-        new_pro = Products()
-        new_pro.insert_new_product(**new_product)
+        new_pro = Products().insert_new_product(**new_product)
         return make_response(jsonify({"message": "Product saved successfully"}), 201) #Created
 
 
