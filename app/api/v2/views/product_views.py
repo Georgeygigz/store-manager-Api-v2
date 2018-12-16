@@ -55,9 +55,9 @@ class ViewProducts(Resource):
         image=data['image']
  
         empty_inputs = [product_name,category,stock_amount,price,image]
-        for empty_field in empty_inputs:
-            if (empty_field ==""):
-                return make_response(jsonify({'message': "{} Empty field detected".format(empty_field)}))
+        e_inputs =[empty_field for empty_field in empty_inputs if (empty_field =="")]
+        if e_inputs:
+            return make_response(jsonify({'message': "{} Empty field detected".format(e_inputs[0])}))
 
         product = [product for product in get_all_products() if product['product_name']
                    == request.json['product_name']]
