@@ -24,6 +24,11 @@ def check_empty_inputs():
         if (empty_input ==""):
             return True
 
+def check_exist_in_cart():    
+    if request.json['product_name'] in [sale['product_name']
+                                        for sale in get_all_sales()]:
+        return True
+
 products = Products().get_all_products()
 
 class SingleSale(Resource):
@@ -72,16 +77,13 @@ class ViewSalesRecord(Resource):
     @store_attendant_required
     def post(self):
         """ Make a new sale record."""
-        users= Users().get_all_users()
-        cur_user=[user for user in users if user['email']==get_jwt_identity()]
-        user_name=cur_user[0]['username']
+        cur_user=[user for user in Users().get_all_users() if user['email']==get_jwt_identity()]
         products = Products().get_all_products()
-        current_date = str(date.today())
         data = request.get_json(force=True)
         required_inputs = ['customer_name', 'product_name','quantity']
-        for field in required_inputs:
-            if field not in request.json:
-                    return make_response(jsonify({'message': " {} is required".format(field)}))
+        inputs=[field for field in required_inputs if field not in request.json ]
+        if inputs:
+            return make_response(jsonify({'message': " {} is required".format(inputs[0])}))
 
         if check_empty_inputs():
             return make_response(jsonify({'message': "All fields are required"}))
@@ -94,32 +96,23 @@ class ViewSalesRecord(Resource):
                     request.json['product_name'])}, 200 #ok
         if request.json['quantity'] > current_product[0]['stock_amount']:
             return {"message": "Quantity exeed amount in stock"}, 200 #ok
-        
 
         sale_id = len(get_all_sales()) + 1
-        attedant_name = user_name
+        attedant_name = cur_user[0]['username']
         customer_name = (data["customer_name"]).lower()
         product_name = (data["product_name"]).lower()
         price = current_product[0]['price']
         quantity = data["quantity"]
         total_price = price * quantity
-        date_sold = current_date
+        date_sold = str(date.today())
 
-        if request.json['product_name'] in [sale['product_name']
-                                            for sale in get_all_sales()]:
-            return {
-                "message": "{} Exist in cart".format(
+        if check_exist_in_cart():
+            return {"message": "{} Exist in cart".format(
                     request.json['product_name'])}, 200 #ok
 
-        new_sale = {
-            "sale_id": sale_id,
-            "attedant_name": attedant_name,
-            "customer_name": customer_name,
-            "product_name": product_name,
-            "product_price": price,
-            "quantity": quantity,
-            "total_price": total_price,
-            "date_sold": date_sold
+        new_sale = {"sale_id": sale_id, "attedant_name": attedant_name,"customer_name": customer_name, 
+                    "product_name": product_name, "product_price": price, "quantity": quantity,
+                    "total_price": total_price, "date_sold": date_sold
         }
         current_product[0]['stock_amount'] -= request.json['quantity']
         update_product = Products()
