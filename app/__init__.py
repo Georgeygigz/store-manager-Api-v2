@@ -6,7 +6,7 @@ from flask import Flask, Blueprint,make_response,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 import os
 from instance.config import app_configuration, Config
 from flask_cors import CORS
@@ -18,9 +18,13 @@ db.destory()
 db.create_table()
            
 from instance.config import app_configuration
-from app.api.v2.views.store_views import (
-    ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleSale, ProductCategories, SingleProductCategory)
-from app.api.v2.views.auth_view import CreateAccount, Login,UpdateUserRole, Logout
+from app.api.v2.views.product_views import (ViewSingleProduct,ViewProducts)
+from app.api.v2.views.sales_view import (ViewSalesRecord,SingleAttedantSales,SingleSale)
+from app.api.v2.views.auth_view import (Users)
+from app.api.v2.views.category_view import ( ProductCategories, SingleProductCategory)
+
+from app.api.v2.views.auth_view import CreateAccount, Login,SingleUser, Logout
+from app.api.v2.views.auth_view import blacklist
 
 
 blueprint = Blueprint('product', __name__, url_prefix='/api/v2')
@@ -32,18 +36,27 @@ def create_app(config_name):
     app.register_blueprint(blueprint)
     app.config['JWT_SECRET_KEY'] = "dbskbjdmsdscdscdsdk"
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+    app.config['JWT_BLACKLIST_ENABLED'] = True
+    app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
     jwt.init_app(app)
     CORS(app)
     app_api.add_resource(ViewProducts, '/products')
     app_api.add_resource(ViewSingleProduct, '/products/<int:product_id>')
     app_api.add_resource(ViewSalesRecord, '/sales')
     app_api.add_resource(SingleSale, '/sales/<int:sale_id>')
+    app_api.add_resource(SingleAttedantSales, '/sales/<string:attedant_name>')
     app_api.add_resource(ProductCategories, '/category')
     app_api.add_resource(SingleProductCategory, '/category/<int:category_id>')
     app_api.add_resource(CreateAccount, '/auth/register')
     app_api.add_resource(Login, '/auth/login')
-    app_api.add_resource(UpdateUserRole, '/auth/role/<int:user_id>')
+    app_api.add_resource(SingleUser, '/auth/user/<int:user_id>')
     app_api.add_resource(Logout, '/auth/logout')
+
+    @jwt.token_in_blacklist_loader
+    def check_if_token_in_blacklist(decrypted_token):
+        jti = decrypted_token['jti']
+        return jti in blacklist
+
     
     @app.errorhandler(404)
     def not_found(e):

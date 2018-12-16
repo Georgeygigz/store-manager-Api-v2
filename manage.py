@@ -1,6 +1,6 @@
 import psycopg2
 import os
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 from dbconn import create_tables
 from instance.config import app_configuration
 
@@ -17,21 +17,25 @@ class Database:
             for query in create_tables:
                 self.curr.execute(query)
             self.conn.commit()
+            
             attedant = Users()
-            attedant.insert_new_user(
-                1,
-                'george',
-                "georgey@gmail.com",
-                "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
-                "attedant")
-            admin = Users()
-            admin.insert_new_user(
-                2,
-                'mary',
-                "mary@gmail.com",
-                "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
-                "admin")
-            self.curr.close
+            all_users=attedant.get_all_users()
+            user=[c_user for c_user in all_users if c_user['email']=='georgey@gmail.com']
+            if not user:
+                attedant.insert_new_user(
+                    1,
+                    'george',
+                    "georgey@gmail.com",
+                    "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
+                    "attedant")
+                admin = Users()
+                admin.insert_new_user(
+                    2,
+                    'mary',
+                    "mary@gmail.com",
+                    "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
+                    "admin")
+                self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
             return e
 
@@ -40,9 +44,10 @@ class Database:
     def destory(self):
         products = "DROP TABLE IF EXISTS  products CASCADE"
         sales = "DROP TABLE IF EXISTS  sales CASCADE"
+        cart = "DROP TABLE IF EXISTS  cart CASCADE"
         users = "DROP TABLE IF EXISTS  users CASCADE"
         product_category = "DROP TABLE IF EXISTS  products_category CASCADE"
-        drop_queries = [products, sales, users, product_category]
+        drop_queries = [products, sales, cart, users, product_category]
         try:
             for query in drop_queries:
                 self.curr.execute(query)

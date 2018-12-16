@@ -10,25 +10,41 @@ from passlib.hash import sha256_crypt
 from flask_restful import Resource, reqparse
 
 # import class products
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 from app.api.v2.utils.authorization import admin_required
 blacklist = set()
 
+def get_all_users():
+    users=Users().get_all_users()
+    return users
+
+def get_user_data():
+    data = request.get_json(force=True)
+    return data
+    
 class CreateAccount(Resource):
+    """Get all users."""
+    @jwt_required
+    @admin_required
+    def get(self):
+        if not get_all_users():
+            return make_response(
+                jsonify({"message": "No available users"}), 200)#ok
+        return make_response(jsonify({"message":get_all_users()}), 200)#ok
+
+        
     """Create a new account."""
     @jwt_required
     @admin_required
     def post(self):
         """Create an account for new user."""
-        users = Users().get_all_users()
-        data = request.get_json(force=True)
-        user_id = len(users) + 1
-        username = data["username"]
-        email = data["email"]
-        password = data["password"]
-        role = data["role"]
+        user_id = len(get_all_users()) + 1
+        username = get_user_data()["username"]
+        email = get_user_data()["email"]
+        password = get_user_data()["password"]
+        role = get_user_data()["role"]
 
-        single_user = [user for user in users if user['email']
+        single_user = [user for user in get_all_users() if user['email']
                        == request.json['email']]
         if not re.match(
             r'^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$',
@@ -60,17 +76,15 @@ class Login(Resource):
     """Login Endpoint."""
 
     def post(self):
-        users = Users().get_all_users()
-        data = request.get_json(force=True)
-        email = data['email']
-        get_password = data['password']
-        cur_user = [c_user for c_user in users if c_user['email'] == email]
+        email = get_user_data()['email']
+        get_password = get_user_data()['password']
+        cur_user = [c_user for c_user in get_all_users() if c_user['email'] == email]
 
         if len(cur_user) > 0:
             password = cur_user[0]['password']
             if sha256_crypt.verify(get_password, password):
                 token = create_access_token(identity=cur_user[0]['email'])
-                result = {"message": "Login succesful", "token": token}
+                result = {"message": "Login succesful","User":cur_user[0]['username'],"Role":cur_user[0]['role'], "token": token}
 
             else:
                 return make_response(
@@ -82,21 +96,32 @@ class Login(Resource):
         return result, 200 #ok
 
 
-class UpdateUserRole(Resource):
+class SingleUser(Resource):
     @jwt_required
     @admin_required
     def put(self, user_id):
         """Update user role."""
-        users = Users().get_all_users()
-        data = request.get_json(force=True)
-        role = (data["role"]).lower()
-        update_user = [user for user in users if user['user_id'] == user_id]
+        role = (get_user_data()["role"]).lower()
+        update_user = [user for user in get_all_users() if user['user_id'] == user_id]
         if not update_user:
-            return make_response(jsonify({'Error': "User Not found"}), 400) #Bad request
+            return make_response(jsonify({'message': "User Not found"}), 400) #Bad request
         user = Users()
         user.update_user(user_id, role)
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200) #ok
+            {'message': "Updated Successfuly"}), 200) #ok
+    
+    
+    @jwt_required
+    @admin_required
+    def delete(self, user_id):
+        """Delete user."""
+        c_user = [
+            current_user for current_user in get_all_users() if current_user['user_id'] == user_id]
+        if not c_user:
+            return make_response(jsonify({'message': "User Not found"}),  400) #Bad Request
+        cur_user = Users()
+        cur_user.delete_users(user_id)
+        return make_response(jsonify({'message': "User Deleted Successfuly"}), 200) #ok
 
 class Logout(Resource):
     @jwt_required

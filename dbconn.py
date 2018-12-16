@@ -6,9 +6,19 @@ products = """CREATE TABLE IF NOT EXISTS products(
  	                   category_id VARCHAR NOT NULL,
  	                   stock_amount INT NOT NULL,
  	                   price FLOAT,
- 	                   low_inventory_stock INT);"""
+					   image VARCHAR(200) NOT NULL);"""
 
 sales = """CREATE TABLE IF NOT EXISTS sales(
+ 	                    sale_id INT PRIMARY KEY,
+ 	                    attedant_name VARCHAR NOT NULL ,
+ 	                    customer_name VARCHAR NOT NULL,
+ 	                    product_name VARCHAR NOT NULL,
+ 	                    product_price FLOAT NOT NULL,
+ 	                    quantity FLOAT NOT NULL,
+ 	                    total_price FLOAT NOT NULL,
+ 	                    date_sold DATE);"""
+
+cart = """CREATE TABLE IF NOT EXISTS cart(
  	                    sale_id INT PRIMARY KEY,
  	                    attedant_name VARCHAR NOT NULL ,
  	                    customer_name VARCHAR NOT NULL,
@@ -30,4 +40,4 @@ category = """CREATE TABLE IF NOT EXISTS products_category(
  	                   category_id INT ,
  	                   category_name VARCHAR PRIMARY KEY NOT NULL);"""
 
-create_tables = [products, sales, users, category]
+create_tables = [products, sales, cart, users, category]

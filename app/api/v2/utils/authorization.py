@@ -3,7 +3,7 @@
 from flask_jwt_extended import get_jwt_identity
 from functools import wraps
 
-from app.api.v2.models.store_model import Users
+from app.api.v2.models.auth_model import Users
 
 def admin_required(func):
     """ Admin Rights."""

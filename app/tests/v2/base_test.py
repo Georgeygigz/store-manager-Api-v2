@@ -18,7 +18,7 @@ class BaseTest(unittest.TestCase):
             "category_id": 1,
             "stock_amount": 2000,
             "price": 20,
-            "low_inventory_stock": 2
+            "image":"orange.png"
         }
         self.invalid_data_types_products = {
             "product_id": 1,
@@ -26,7 +26,7 @@ class BaseTest(unittest.TestCase):
             "category_id": 1,
             "stock_amount": "2000",
             "price": 20,
-            "low_inventory_stock": 2
+            "image":"orange.png"
         }
 
         self.sales = {
@@ -94,8 +94,7 @@ class BaseTest(unittest.TestCase):
             "product_name": "",
             "category_id": 1,
             "stock_amount": 2000,
-            "price": 20,
-            "low_inventory_stock": 2
+            "price": 20
         }
        
         self.invalid_login = {
