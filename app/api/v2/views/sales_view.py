@@ -115,10 +115,8 @@ class ViewSalesRecord(Resource):
                     "total_price": total_price, "date_sold": date_sold
         }
         current_product[0]['stock_amount'] -= request.json['quantity']
-        update_product = Products()
-        update_product.update_stock_amount(
+        update_product = Products().update_stock_amount(
             current_product[0]['product_name'],
             current_product[0]['stock_amount'])
-        new_sales_record = Sales()
-        new_sales_record.insert_new_sale(**new_sale)
+        new_sales_record = Sales().insert_new_sale(**new_sale)
         return {"message": "Item added successfuly"}, 201  # created
