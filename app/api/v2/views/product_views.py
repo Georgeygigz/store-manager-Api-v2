@@ -39,16 +39,17 @@ class ViewProducts(Resource):
     @admin_required
     def post(self):
         """Add a new product."""
+        data = request.get_json(force=True)
         required_inputs = ['product_name', 'category_id','stock_amount', 'price', 'image']
         for field in required_inputs:
             if field not in request.json:
                 return make_response(jsonify({'message': " {} missing".format(field)}))
         product_id = len(get_all_products()) + 1
-        product_name = get_user_data()["product_name"]
-        category = get_user_data()["category_id"]
-        stock_amount = get_user_data()["stock_amount"]
-        price = get_user_data()['price']
-        image=get_user_data()['image']
+        product_name = data["product_name"]
+        category = data["category_id"]
+        stock_amount =data["stock_amount"]
+        price = data['price']
+        image=data['image']
         empty_inputs = [product_name,category,stock_amount,price,image]
         for empty_field in empty_inputs:
             if (empty_field ==""):

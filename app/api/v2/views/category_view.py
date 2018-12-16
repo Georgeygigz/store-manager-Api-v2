@@ -64,13 +64,13 @@ class SingleProductCategory(Resource):
     @admin_required
     def put(self, category_id):
         """Update product category."""
-        category_name = (get_user_data()["category_name"]).lower()
+        category = (get_user_data()["category_name"]).lower()
         product_category = [
             category for category in view_all_categories() if category['category_id'] == category_id]
         if not product_category:
             return make_response(jsonify({'message': "Category Not found"}), 400) #Bad Request
         new_category = Categories()
-        new_category.update_product_category(category_id, category_name)
+        new_category.update_product_category(category_id, category)
         return make_response(jsonify({'message': "Updated Successfuly"}), 200)
 
     @jwt_required

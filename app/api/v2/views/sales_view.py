@@ -18,6 +18,11 @@ def get_all_sales():
     sales_record = Sales().get_all_sales()
     return sales_record
 
+def check_empty_inputs():
+    empty_data = [request.json['customer_name'],request.json['product_name'],request.json['quantity']]
+    for empty_input in empty_data:
+        if (empty_input ==""):
+            return True
 
 products = Products().get_all_products()
 
@@ -76,12 +81,11 @@ class ViewSalesRecord(Resource):
         required_inputs = ['customer_name', 'product_name','quantity']
         for field in required_inputs:
             if field not in request.json:
-                return make_response(jsonify({'message': " {} is required".format(field)}))
+                    return make_response(jsonify({'message': " {} is required".format(field)}))
 
-        empty_data = [request.json['customer_name'],request.json['product_name'],request.json['quantity']]
-        for empty_input in empty_data:
-            if (empty_input ==""):
-                return make_response(jsonify({'message': "{} All fields are required".format(empty_input)}))
+        if check_empty_inputs():
+            return make_response(jsonify({'message': "All fields are required"}))
+
         current_product = [
             product for product in products if product['product_name'] == request.json['product_name']]
         if not current_product or current_product[0]['stock_amount'] == 0:
@@ -90,6 +94,7 @@ class ViewSalesRecord(Resource):
                     request.json['product_name'])}, 200 #ok
         if request.json['quantity'] > current_product[0]['stock_amount']:
             return {"message": "Quantity exeed amount in stock"}, 200 #ok
+        
 
         sale_id = len(get_all_sales()) + 1
         attedant_name = user_name
@@ -99,13 +104,6 @@ class ViewSalesRecord(Resource):
         quantity = data["quantity"]
         total_price = price * quantity
         date_sold = current_date
-        required_field = [product_name,quantity,customer_name]
-        for all_fields in required_field:
-            if (all_fields ==""):
-                return make_response(jsonify({'message': "{} Empty field detected".format(all_fields)}))
-
-        if (not request.json or "product_name" not in request.json):
-            return {'message': "Request Not found"},  400 #Bad Request
 
         if request.json['product_name'] in [sale['product_name']
                                             for sale in get_all_sales()]:
