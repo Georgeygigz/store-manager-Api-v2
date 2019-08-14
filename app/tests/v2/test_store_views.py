@@ -6,6 +6,7 @@ from app import create_app
 from .base_test import BaseTest
 
 class TestStoreViews(BaseTest):
+    # pass
     def test_config(self):
         """Test configurations."""
         self.assertEqual(self.app.testing, True)  

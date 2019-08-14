@@ -32,4 +32,4 @@ app_configuration={
     'release': ReleaseConfig,
 }
 
-AppConfig = TestingConfig if 'pytest' in sys.modules else app_configuration.get(os.getenv('FLASK_ENV'),'development')
+AppConfig = 'testing' if 'pytest' in sys.modules else app_configuration.get(os.getenv('FLASK_ENV'),'development')

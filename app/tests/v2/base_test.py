@@ -3,14 +3,14 @@ import unittest
 import json
 import jwt
 from app import create_app
-
 from manage import Database
+from instance.config import AppConfig
 data_base=Database()
 
 """Creating a new testing  class."""
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app('testing').test_client()
+        self.app = create_app(AppConfig).test_client()
         self.app.testing = True
         data_base.create_table()
         self.products = {
@@ -126,6 +126,7 @@ class BaseTest(unittest.TestCase):
     def get_admin_token(self):
         resp_login = self.admin_login()
         token = resp_login.get("token")
+
         return token
 
     def add_new_product(self):
@@ -301,6 +302,7 @@ class BaseTest(unittest.TestCase):
             data=json.dumps(self.user)
         
         )
+
         return response
 
     def signup_existing_user(self):
