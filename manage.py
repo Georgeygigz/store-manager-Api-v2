@@ -4,7 +4,7 @@ from app.api.v2.models.store_model import Users
 from dbconn import create_tables
 from instance.config import app_configuration
 
-dev_url = app_configuration['development'].DATA_BASE_URL
+dev_url = app_configuration['development'].DATA_BASE_URI
 
 
 class Database:

@@ -3,13 +3,14 @@ import unittest
 import json
 import jwt
 from app import create_app
+from instance.config import AppConfig
 from manage import Database
 data_base=Database()
 
 """Creating a new testing  class."""
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app('testing').test_client()
+        self.app = create_app(AppConfig).test_client()
         self.app.testing = True
         data_base.create_table()
         self.products = {
