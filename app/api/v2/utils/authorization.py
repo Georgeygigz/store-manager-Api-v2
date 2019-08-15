@@ -23,6 +23,7 @@ def admin_required(func):
     return wrapper_function
 
 
+
 def store_attendant_required(func):
     """Store attedant rights."""
     @wraps(func)

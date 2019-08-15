@@ -4,12 +4,13 @@ import json
 import jwt
 from app import create_app
 from manage import Database
+from instance.config import AppConfig
 data_base=Database()
 
 """Creating a new testing  class."""
 class BaseTest(unittest.TestCase):
     def setUp(self):
-        self.app = create_app('testing').test_client()
+        self.app = create_app(AppConfig).test_client()
         self.app.testing = True
         data_base.create_table()
         self.products = {
@@ -112,7 +113,7 @@ class BaseTest(unittest.TestCase):
 
     def admin_login(self):
         response = self.app.post('/api/v2/auth/login',
-                                 data=json.dumps({"email": "mary@gmail.com","password": "g@_gigz-2416"}))
+                                 data=json.dumps({"email": "mary@gmail.com","password": "password"}))
         result = json.loads(response.data.decode('utf-8'))
         return result
 
@@ -125,6 +126,7 @@ class BaseTest(unittest.TestCase):
     def get_admin_token(self):
         resp_login = self.admin_login()
         token = resp_login.get("token")
+
         return token
 
     def add_new_product(self):
@@ -300,6 +302,7 @@ class BaseTest(unittest.TestCase):
             data=json.dumps(self.user)
         
         )
+
         return response
 
     def signup_existing_user(self):

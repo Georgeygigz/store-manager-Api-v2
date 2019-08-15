@@ -1,19 +1,31 @@
-# app/api/v2/models/store_model.py
+#app/api/v2/models/store_model.py
 from ....store_database import conn_db
 
 
 """Model file that interacts with the database."""
 
-
-class Products():
+class DbInitializer:
     def __init__(self):
         self.db = conn_db()
 
+    def init_db(self):
+        conn = self.db
+        return conn
+    
+    def init_cursor(self):
+        conn = self.init_db()
+        cursor = conn.cursor()
+        return cursor
+    
+    
+
+
+class Products(DbInitializer):
+
     def get_all_products(self):
         """Get all products."""
-        conn = self.db
         try:
-            curr = conn.cursor()
+            curr = self.init_db().cursor()
             query = """SELECT * FROM products;"""
             curr.execute(query)
             data = curr.fetchall()
@@ -32,16 +44,10 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-    def insert_new_product(
-            self,
-            product_id,
-            product_name,
-            category_id,
-            stock_amount,
-            price,
-            low_inventory_stock):
+    def insert_new_product(self, *args):
         """Insert New Product."""
-        database = self.db
+        database = self.init_db()
+        product_id, product_name, category_id, stock_amount, price, low_inventory_stock = args
         try:
             curr = database.cursor()
             query = "INSERT INTO products (product_id,product_name,category_id,stock_amount,price,low_inventory_stock) VALUES (%s,%s,%s,%s,%s,%s);"
@@ -52,17 +58,10 @@ class Products():
         except Exception as e:
             return {"Message": e}
 
-    def update_product(
-        self,
-        product_id,
-        product_name,
-        category_id,
-        stock_amount,
-        price,
-        low_inventory_stock,
-    ):
+    def update_product(self, *args):
         """Update Product."""
-        database = self.db
+        database = self.init_db()
+        product_id, product_name, category_id, stock_amount, price, low_inventory_stock = args
         try:
             curr = database.cursor()
             query = "UPDATE products SET product_name=%s,category_id=%s,stock_amount=%s,price=%s,low_inventory_stock=%s WHERE product_id=%s;"
@@ -81,7 +80,7 @@ class Products():
 
     def update_stock_amount(self, product_name, stock_amount):
         """Update Product."""
-        database = self.db
+        database = self.init_db()
         try:
             curr = database.cursor()
             query = "UPDATE products SET stock_amount=%s WHERE product_name=%s;"
@@ -94,7 +93,7 @@ class Products():
 
     def delete_product(self, product_id):
         """Delete Product."""
-        database = self.db
+        database = self.init_db()
         try:
             curr = database.cursor()
             query = "DELETE FROM products WHERE product_id=%s;"
@@ -106,15 +105,12 @@ class Products():
             return {"Message": e}
 
 
-class Sales:
+class Sales(DbInitializer):
     """Sales Records."""
-
-    def __init__(self):
-        self.db = conn_db()
 
     def get_all_sales(self):
         """Get all sales records."""
-        conn = self.db
+        conn = self.init_db()
         try:
             curr = conn.cursor()
             query = """SELECT * FROM sales;"""
@@ -139,18 +135,10 @@ class Sales:
         except Exception as e:
             return {"Message": e}
 
-    def insert_new_sale(
-            self,
-            sale_id,
-            attedant_name,
-            customer_name,
-            product_name,
-            product_price,
-            quantity,
-            total_price,
-            date_sold):
+    def insert_new_sale(self, *args):
         """Make a new sale Record."""
-        database = self.db
+        database = self.init_db()
+        sale_id, attedant_name, customer_name, product_name, product_price, quantity, total_price, date_sold = args
         curr = database.cursor()
         query = "INSERT INTO sales (sale_id,attedant_name,customer_name,product_name,product_price,quantity,total_price,date_sold) VALUES (%s,%s,%s,%s,%s,%s,%s,%s);"
         curr.execute(
@@ -167,14 +155,13 @@ class Sales:
         return {"Message": "Sale record Save succefully"}
 
 
-class Categories:
+class Categories(DbInitializer):
     def __init__(self):
         """Products' category."""
-        self.db = conn_db()
 
     def get_all_categories(self):
         """Get all products' categories"""
-        conn = self.db
+        conn = self.init_db()
         try:
             curr = conn.cursor()
             query = """SELECT * FROM products_category;"""
@@ -196,7 +183,7 @@ class Categories:
 
     def insert_new_produc_category(self, category_id, category_name):
         """Add new product category."""
-        database = self.db
+        database = self.init_db()
         curr = database.cursor()
         query = "INSERT INTO products_category (category_id,category_name) VALUES (%s,%s);"
         curr.execute(query, (category_id, category_name))
@@ -205,7 +192,7 @@ class Categories:
 
     def update_product_category(self, category_id, category_name):
         """Update product category."""
-        database = self.db
+        database = self.init_db()
         try:
             curr = database.cursor()
             query = "UPDATE products_category SET category_name=%s WHERE category_id=%s;"
@@ -217,7 +204,7 @@ class Categories:
 
     def delete_product_category(self, category_id):
         """Delete Category."""
-        database = self.db
+        database = self.init_db()
         try:
             curr = database.cursor()
             query = "DELETE FROM products_category WHERE category_id=%s;"
@@ -229,26 +216,26 @@ class Categories:
             return {"Message": e}
 
 
-class Users:
+class Users(DbInitializer):
     """Users mode."""
 
-    def __init__(self):
-        self.db = conn_db()
-
-    def insert_new_user(self, user_id, username, email, password, role):
+    def insert_new_user(self, *args):
         """Insert new user."""
-        database = self.db
-        curr = database.cursor()
+        database = self.init_db()
+        curr = self.init_cursor()
+        user_id, username, email, password, role = args
         query = "INSERT INTO users (user_id, username,email, password,user_type) VALUES (%s,%s,%s,%s,%s);"
         curr.execute(query, (user_id, username, email, password, role))
+        # import pdb; pdb.set_trace()
+
         database.commit()
         curr.close()
         return {"Message": "User created succefully"}
 
     def get_all_users(self):
         """Get all users."""
-        conn = self.db
-        curr = conn.cursor()
+        conn = self.init_db()
+        curr = self.init_cursor()
         query = """SELECT * FROM users;"""
         curr.execute(query)
         data = curr.fetchall()
@@ -266,12 +253,14 @@ class Users:
 
     def update_user(self, user_id, role):
         """Update product category."""
-        database = self.db
+        database =  self.init_db()
         try:
-            curr = database.cursor()
+            curr = self.init_cursor()
             query = "UPDATE users SET user_type=%s WHERE user_id=%s;"
             curr.execute(query, (role, user_id))
             database.commit()
             return {"Message": "Category Updated successfully"}
         except Exception as e:
             return {"Message": e}
+
+

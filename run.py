@@ -2,8 +2,9 @@
 
 import os
 from app import create_app
-config_name = os.getenv('APP_SETTINGS')
-app = create_app(config_name)
+from instance.config import AppConfig
+# config_name = os.getenv('APP_SETTINGS')
+app = create_app(AppConfig)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

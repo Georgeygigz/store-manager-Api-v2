@@ -4,7 +4,7 @@ from app.api.v2.models.store_model import Users
 from dbconn import create_tables
 from instance.config import app_configuration
 
-dev_url = app_configuration['development'].DATA_BASE_URL
+dev_url = app_configuration['development'].DATA_BASE_URI
 
 
 class Database:
@@ -29,7 +29,7 @@ class Database:
                 2,
                 'mary',
                 "mary@gmail.com",
-                "$5$rounds=535000$c1lBmoZ/ffpmu0.7$XcIpRoAllo8dhF.o95k9f69lBxpSez8c9KduCvhBk68",
+                "$5$rounds=535000$DFZvoc5l3ETZ9QQp$Ga1awNxa33AID3ks7CVjAlhaEOap6BbDg0CdYAkEsz5",
                 "admin")
             self.curr.close
         except (Exception, psycopg2.DatabaseError) as e:
