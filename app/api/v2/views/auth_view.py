@@ -9,6 +9,9 @@ from passlib.hash import sha256_crypt
 
 from flask_restful import Resource, reqparse
 
+from app.api.v3.models.auth_modles import User;
+from app.api.v3.schemas.auth_shema import UserSchema
+
 # import class products
 from app.api.v2.models.store_model import Users
 from app.api.v2.utils.authorization import admin_required
@@ -20,16 +23,19 @@ class CreateAccount(Resource):
     @admin_required
     def post(self):
         """Create an account for new user."""
-        users = Users().get_all_users()
+        users = User.query.all()
         data = request.get_json(force=True)
-        user_id = len(users) + 1
+        user_id =  2
         username = data["username"]
         email = data["email"]
         password = data["password"]
-        role = data["role"]
+        user_type = data["user_type"]
 
-        single_user = [user for user in users if user['email']
-                       == request.json['email']]
+        current_user = [user for user in users if user.email == email]
+        if current_user:
+            return make_response(jsonify({"message": "{} Already Exist".format(current_user[0].email)}), 409)#Bad request
+
+
         if not re.match(
             r'^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$',
                 request.json['email']):
@@ -40,16 +46,20 @@ class CreateAccount(Resource):
                 request.json['password']):
             return make_response(jsonify({"message": "invalid password"}), 400)#Bad request
 
-        new_user_detail = {"user_id": user_id,
+        new_user_detail = {"user_id": len(users)+1,
                            "username": username,
                            "email": email,
                            "password": sha256_crypt.hash(password),
-                           "role": role}
+                           "user_type": user_type}
+        schema  = UserSchema()
+        # import pdb; pdb.set_trace()
 
-        if not single_user:
-            new_user = Users()
-            new_user.insert_new_user(**new_user_detail)
-            return make_response(
+        data1 = schema.load_object_into_schema(new_user_detail)
+        new_data = User(**data1)
+        new_data.save()
+        # import pdb; pdb.set_trace()
+
+        return make_response(
                 jsonify({"message": "Account created successfuly"}), 201)#created
 
         return make_response(jsonify(
@@ -60,16 +70,15 @@ class Login(Resource):
     """Login Endpoint."""
 
     def post(self):
-        users = Users().get_all_users()
         data = request.get_json(force=True)
         email = data['email']
         get_password = data['password']
-        cur_user = [c_user for c_user in users if c_user['email'] == email]
+        cur_user = User.query.filter(User.email==email).first()
 
-        if len(cur_user) > 0:
-            password = cur_user[0]['password']
+        if cur_user:
+            password = cur_user.password
             if sha256_crypt.verify(get_password, password):
-                token = create_access_token(identity=cur_user[0]['email'])
+                token = create_access_token(identity=cur_user.email)
                 result = {"message": "Login succesful", "token": token}
 
             else:
@@ -90,13 +99,14 @@ class UpdateUserRole(Resource):
         users = Users().get_all_users()
         data = request.get_json(force=True)
         role = (data["role"]).lower()
-        update_user = [user for user in users if user['user_id'] == user_id]
-        if not update_user:
+        current_user = User.query.filter(User.user_id==user_id).first()
+        # update_user = [user for user in users if user['user_id'] == user_id]
+        if not current_user:
             return make_response(jsonify({'Error': "User Not found"}), 400) #Bad request
         user = Users()
         user.update_user(user_id, role)
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(update_user[0]['username'])}), 200) #ok
+            {'Message': "{} Updated Successfuly".format(current_user.username)}), 200) #ok
 
 class Logout(Resource):
     @jwt_required

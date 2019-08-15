@@ -36,7 +36,7 @@ class TestStoreViews(BaseTest):
         """Test add existing account."""
         resp=self.signup_existing_user()
         result = json.loads(resp.data.decode('utf-8'))
-        self.assertEqual(result['message'], ' marry@gmail.com Aready Exist')
+        self.assertEqual(result['message'], 'hellem@gmail.com Already Exist')
         self.assertEqual(resp.status_code, 409)
     
     def test_user_login_with_invalid_password(self):

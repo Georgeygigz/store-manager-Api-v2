@@ -4,21 +4,21 @@ import sys
 class Config():
     DEBUG=False
     SECRET_KEY=os.getenv("JWT_SECRET_KEY") 
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATA_BASE_URI")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     """Enable our debug mode to True in development in order to auto restart our server on code changes"""
 
     DEBUG = True
-    DATA_BASE_URI=os.getenv("DATA_BASE_URI")
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATA_BASE_URI")
 
     
-
 class TestingConfig(Config):
     """Testing app configurations"""
     TESTING = True
     DEBUG = True
-    DATABASE_URL=os.getenv("TEST_DATABASE_URL")
-    
+    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_DATABASE_URL")
     
 class ReleaseConfig(Config):
     """Releasing app configurations"""

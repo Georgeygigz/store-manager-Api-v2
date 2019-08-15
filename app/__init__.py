@@ -2,21 +2,19 @@
 '''
 Register Blueprints
 '''
+
+from flask_migrate import Migrate
 from flask import Flask, Blueprint,make_response,jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
-from app.api.v2.models.store_model import Users
 import os
 from instance.config import app_configuration, Config
 from flask_cors import CORS
 
+from app.api.v3.models.databases import db
+
 # local imports
-from manage import Database
-db=Database()
-db.destory()
-db.create_table()
-           
 from instance.config import app_configuration
 from app.api.v2.views.store_views import (
     ViewProducts, ViewSingleProduct, ViewSalesRecord, SingleSale, ProductCategories, SingleProductCategory)
@@ -26,14 +24,19 @@ from app.api.v2.views.auth_view import CreateAccount, Login,UpdateUserRole, Logo
 blueprint = Blueprint('product', __name__, url_prefix='/api/v2')
 app_api = Api(blueprint)
 jwt = JWTManager()
+
 def create_app(config_name):
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_configuration[config_name])
+    db.init_app(app)
+
     app.register_blueprint(blueprint)
     app.config['JWT_SECRET_KEY'] = "dbskbjdmsdscdscdsdk"
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=2400)
     jwt.init_app(app)
     CORS(app)
+
     app_api.add_resource(ViewProducts, '/products')
     app_api.add_resource(ViewSingleProduct, '/products/<int:product_id>')
     app_api.add_resource(ViewSalesRecord, '/sales')

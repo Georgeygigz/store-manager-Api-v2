@@ -5,7 +5,7 @@ import psycopg2
 import os
 from instance.config import app_configuration
 
-dev_url=app_configuration['development'].DATA_BASE_URI
+dev_url=app_configuration['development'].SQLALCHEMY_DATABASE_URI
 
 def conn_db():
 	"""Create a new connection."""

@@ -7,28 +7,35 @@ from flask_restful import Resource
 from flask_jwt_extended import (jwt_required, get_jwt_identity)
 
 # local imports
-from app.api.v2.models.store_model import (Products, Sales, Categories,Users)
+# from app.api.v2.models.store_model import (Products, Sales, Categories,Users)
 from app.api.v2.utils.authorization import (
     admin_required, store_attendant_required)
 
-products = Products().get_all_products()
+from app.api.v3.models.products_model import Products
+from app.api.v3.schemas.products_schema import ProductsSchema
+
+def get_products():
+    products = Products.query.all()
+    return products
 
 
 class ViewProducts(Resource):
     @jwt_required
     def get(self):
         """Get all products."""
-        products = Products().get_all_products()
+        products = get_products()
+        schema  = ProductsSchema(many=True)
+        data = schema.dump(products)
         if not products:
             return make_response(
                 jsonify({"message": "No Available products"}), 200) #Ok
-        return make_response(jsonify({"Available Products": products}), 200) #Ok
+        return make_response(jsonify({"Available Products": data}), 200) #Ok
 
     @jwt_required
     @admin_required
     def post(self):
         """Add a new product."""
-        products = Products().get_all_products()
+        products = get_products()
         data = request.get_json(force=True)
         product_id = len(products) + 1
         product_name = data["product_name"]
@@ -38,7 +45,8 @@ class ViewProducts(Resource):
         inventory_stock = data['low_inventory_stock']
 
 
-        product = [product for product in products if product['product_name']
+
+        product = [product for product in products if product.product_name
                    == request.json['product_name']]
 
         if (not request.json or "product_name" not in request.json):
@@ -48,13 +56,13 @@ class ViewProducts(Resource):
             return make_response(
                 jsonify({"Error": "Require int or float type"}))
 
-        if request.json['product_name'] in [
-                n_product['product_name'] for n_product in products]:
-            product[0]["stock_amount"] += request.json['stock_amount']
-            update_product = Products()
-            update_product.update_stock_amount(
-                product[0]['product_name'], product[0]['stock_amount'])
-            return make_response(jsonify({"Products": product}), 200)  # ok
+        # if request.json['product_name'] in [
+        #         n_product['product_name'] for n_product in products]:
+        #     product[0]["stock_amount"] += request.json['stock_amount']
+        #     update_product = Products()
+        #     update_product.update_stock_amount(
+        #         product[0]['product_name'], product[0]['stock_amount'])
+        #     return make_response(jsonify({"Products": product}), 200)  # ok
 
         new_product = {
             "product_id": product_id,
@@ -65,8 +73,10 @@ class ViewProducts(Resource):
             "low_inventory_stock": inventory_stock
         }
 
-        new_pro = Products()
-        new_pro.insert_new_product(**new_product)
+        product_schema = ProductsSchema()
+        new_product_detail = product_schema.load_object_into_schema(new_product)
+        new_pro = Products(**new_product_detail)
+        new_pro.save()
         return make_response(jsonify({"New Product": new_product}), 201) #Created
 
 
@@ -74,51 +84,53 @@ class ViewSingleProduct(Resource):
     @jwt_required
     def get(self, product_id):
         """Fetch single product."""
-        products = Products().get_all_products()
+        products = get_products()
         single_product = [
-            product for product in products if product['product_id'] == product_id]
+            product for product in products if product.product_id == product_id]
+        schema  = ProductsSchema(many=True)
+        data = schema.dump(single_product)
         if not single_product:
             return make_response(jsonify({"Error": "Product Not Found"}), 400) #Bad Request
-        return make_response(jsonify({"Product": single_product}), 200)  # ok
+        return make_response(jsonify({"Product": data}), 200)  # ok
 
     @jwt_required
     @admin_required
     def put(self, product_id):
         """Update product."""
-        products = Products().get_all_products()
+        products = get_products()
         data = request.get_json(force=True)
         product_name = (data["product_name"]).lower()
         category_id = data["category_id"]
         stock_amount = data["stock_amount"]
         price = data['price']
         low_inventory_stock = data['low_inventory_stock']
+
         product = [
-            product for product in products if product['product_id'] == product_id]
+            product for product in products if product.product_id == product_id]
         if not product:
             return make_response(jsonify({'Error': "Product Not found"}),  400) #Bad Request
-        new_pro = Products()
-        new_pro.update_product(
-            product_id,
-            product_name,
-            category_id,
-            stock_amount,
-            price,
-            low_inventory_stock)
+        product[0].product_name=product_name
+        product[0].category_id=category_id
+        product[0].stock_amount=stock_amount
+        product[0].price=price
+        product[0].low_inventory_stock=low_inventory_stock
+        product[0].save()
         return make_response(jsonify(
-            {'Message': "{} Updated Successfuly".format(product[0]['product_name'])}), 200)#Ok
+            {'Message': "{} Updated Successfully".format(product[0].product_name)}), 200)#Ok
 
     @jwt_required
     @admin_required
     def delete(self, product_id):
         """Delete product."""
-        products = Products().get_all_products()
+        products = get_products()
         product = [
-            product for product in products if product['product_id'] == product_id]
+            product for product in products if product.product_id == product_id]
         if not product:
             return make_response(jsonify({'Error': "Product Not found"}),  400) #Bad Request
-        new_pro = Products()
-        new_pro.delete_product(product_id)
-        return make_response(jsonify({'Message': "Deleted Successfuly"}), 200)#ok
+        # new_pro = Products()
+        # new_pro.delete_product(product_id)
+        product[0].delete_(product[0])
+        return make_response(jsonify({'Message': "Deleted Successfully"}), 200)#ok
 
 
 class ViewSalesRecord(Resource):
